@@ -3,34 +3,34 @@ import Button from "../../common/Button";
 import Input from "../../common/Input";
 import "./PaymentForm.css";
 
+const PAYMENT_TYPES = [
+  { value: "credit_card", label: "Tarjeta de Crédito" },
+  { value: "debit_card", label: "Tarjeta de Débito" },
+  { value: "paypal", label: "PayPal" },
+  { value: "bank_transfer", label: "Transferencia Bancaria" },
+  { value: "cash_on_delivery", label: "Pago en Efectivo" },
+];
+
 const PaymentForm = ({
   onSubmit,
   onCancel,
   initialValues = {},
   isEdit = false,
 }) => {
-  const [formData, setFormData] = useState({
-    alias: "",
+  const emptyForm = {
+    type: "credit_card",
     cardNumber: "",
-    placeHolder: "",
+    cardHolderName: "",
     expiryDate: "",
     cvv: "",
     isDefault: false,
-    ...initialValues,
-  });
+  };
 
-  // Actualizar formulario cuando initialValues cambia (modo edición)
+  const [formData, setFormData] = useState({ ...emptyForm, ...initialValues });
+
   useEffect(() => {
     if (initialValues && Object.keys(initialValues).length > 0) {
-      setFormData({
-        alias: "",
-        cardNumber: "",
-        placeHolder: "",
-        expiryDate: "",
-        cvv: "",
-        isDefault: false,
-        ...initialValues,
-      });
+      setFormData({ ...emptyForm, ...initialValues });
     }
   }, [initialValues]);
 
@@ -45,72 +45,75 @@ const PaymentForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
-
-    // Resetear formulario solo si es nuevo (no edición)
     if (!isEdit) {
-      setFormData({
-        alias: "",
-        cardNumber: "",
-        placeHolder: "",
-        expiryDate: "",
-        cvv: "",
-        isDefault: false,
-      });
+      setFormData(emptyForm);
     }
   };
+
+  const isCard =
+    formData.type === "credit_card" || formData.type === "debit_card";
 
   return (
     <form className="payment-form" onSubmit={handleSubmit}>
       <h3>{isEdit ? "Editar Método de Pago" : "Nuevo Método de Pago"}</h3>
 
-      <Input
-        label="Alias de la tarjeta"
-        name="alias"
-        value={formData.alias}
-        onChange={handleChange}
-        required
-      />
-
-      <Input
-        label="Número de tarjeta"
-        name="cardNumber"
-        value={formData.cardNumber}
-        onChange={handleChange}
-        pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}"
-        placeHolder="1234-5678-9012-3456"
-        required
-      />
-
-      <Input
-        label="Nombre del titular"
-        name="placeHolder"
-        value={formData.placeHolder}
-        onChange={handleChange}
-        required
-      />
-
-      <div className="form-row">
-        <Input
-          label="Fecha de expiración"
-          name="expiryDate"
-          value={formData.expiryDate}
+      <div className="form-group">
+        <label htmlFor="type">Tipo de pago</label>
+        <select
+          id="type"
+          name="type"
+          value={formData.type}
           onChange={handleChange}
-          placeHolder="MM/YY"
-          pattern="[0-9]{2}/[0-9]{2}"
           required
-        />
-
-        <Input
-          label="CVV"
-          name="cvv"
-          value={formData.cvv}
-          onChange={handleChange}
-          type="password"
-          maxLength="4"
-          pattern="[0-9]{3,4}"
-          required
-        />
+        >
+          {PAYMENT_TYPES.map((t) => (
+            <option key={t.value} value={t.value}>
+              {t.label}
+            </option>
+          ))}
+        </select>
       </div>
+
+      {isCard && (
+        <>
+          <Input
+            label="Número de tarjeta"
+            name="cardNumber"
+            value={formData.cardNumber}
+            onChange={handleChange}
+            pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}"
+            placeholder="1234-5678-9012-3456"
+          />
+
+          <Input
+            label="Nombre del titular"
+            name="cardHolderName"
+            value={formData.cardHolderName}
+            onChange={handleChange}
+          />
+
+          <div className="form-row">
+            <Input
+              label="Fecha de expiración"
+              name="expiryDate"
+              value={formData.expiryDate}
+              onChange={handleChange}
+              placeholder="MM/YY"
+              pattern="[0-9]{2}/[0-9]{2}"
+            />
+
+            <Input
+              label="CVV"
+              name="cvv"
+              value={formData.cvv}
+              onChange={handleChange}
+              type="password"
+              maxLength="4"
+              pattern="[0-9]{3,4}"
+            />
+          </div>
+        </>
+      )}
 
       <div className="form-checkbox">
         <input

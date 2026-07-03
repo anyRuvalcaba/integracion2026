@@ -1,11 +1,21 @@
 import Button from "../../common/Button";
 import "./PaymentItem.css";
 
+const TYPE_LABELS = {
+  credit_card: "Tarjeta de Crédito",
+  debit_card: "Tarjeta de Débito",
+  paypal: "PayPal",
+  bank_transfer: "Transferencia Bancaria",
+  cash_on_delivery: "Pago en Efectivo",
+};
+
 const PaymentItem = ({ payment, isSelected, onSelect, onEdit, onDelete }) => {
   const maskCardNumber = (number) => {
-    if (!number) return "**** **** **** ****";
-    return `**** **** **** ${number.slice(-4)}`;
+    if (!number) return null;
+    return `**** **** **** ${number.replace(/-/g, "").slice(-4)}`;
   };
+
+  const masked = maskCardNumber(payment.cardNumber);
 
   return (
     <div
@@ -14,10 +24,10 @@ const PaymentItem = ({ payment, isSelected, onSelect, onEdit, onDelete }) => {
       }`}
     >
       <div className="payment-content">
-        <h4>{payment.alias}</h4>
-        <p>{maskCardNumber(payment.cardNumber)}</p>
-        <p>Vence: {payment.expiryDate}</p>
-        <p>Titular: {payment.placeHolder}</p>
+        <h4>{TYPE_LABELS[payment.type] || payment.type}</h4>
+        {payment.cardHolderName && <p>{payment.cardHolderName}</p>}
+        {masked && <p>{masked}</p>}
+        {payment.expiryDate && <p>Vence: {payment.expiryDate}</p>}
         {payment.isDefault && (
           <span className="isDefault-badge">Predeterminada</span>
         )}

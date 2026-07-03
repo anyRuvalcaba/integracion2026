@@ -9,32 +9,21 @@ const AddressForm = ({
   initialValues = {},
   isEdit = false,
 }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    address1: "",
-    address2: "",
-    postalCode: "",
+  const emptyForm = {
+    address: "",
     city: "",
+    state: "",
+    postalCode: "",
     country: "",
-    reference: "",
-    default: false,
-    ...initialValues,
-  });
+    phone: "",
+    isDefault: false,
+  };
 
-  // Actualizar formulario cuando initialValues cambia (modo edición)
+  const [formData, setFormData] = useState({ ...emptyForm, ...initialValues });
+
   useEffect(() => {
     if (initialValues && Object.keys(initialValues).length > 0) {
-      setFormData({
-        name: "",
-        address1: "",
-        address2: "",
-        postalCode: "",
-        city: "",
-        country: "",
-        reference: "",
-        default: false,
-        ...initialValues,
-      });
+      setFormData({ ...emptyForm, ...initialValues });
     }
   }, [initialValues]);
 
@@ -49,19 +38,8 @@ const AddressForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
-
-    // Resetear formulario solo si es nuevo (no edición)
     if (!isEdit) {
-      setFormData({
-        name: "",
-        address1: "",
-        address2: "",
-        postalCode: "",
-        city: "",
-        country: "",
-        reference: "",
-        default: false,
-      });
+      setFormData(emptyForm);
     }
   };
 
@@ -70,32 +48,9 @@ const AddressForm = ({
       <h3>{isEdit ? "Editar Dirección" : "Nueva Dirección"}</h3>
 
       <Input
-        label="Nombre de la dirección"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-      />
-
-      <Input
-        label="Dirección Línea 1"
-        name="address1"
-        value={formData.address1}
-        onChange={handleChange}
-        required
-      />
-
-      <Input
-        label="Dirección Línea 2"
-        name="address2"
-        value={formData.address2}
-        onChange={handleChange}
-      />
-
-      <Input
-        label="Código Postal"
-        name="postalCode"
-        value={formData.postalCode}
+        label="Calle y número"
+        name="address"
+        value={formData.address}
         onChange={handleChange}
         required
       />
@@ -109,6 +64,22 @@ const AddressForm = ({
       />
 
       <Input
+        label="Estado"
+        name="state"
+        value={formData.state}
+        onChange={handleChange}
+        required
+      />
+
+      <Input
+        label="Código Postal"
+        name="postalCode"
+        value={formData.postalCode}
+        onChange={handleChange}
+        required
+      />
+
+      <Input
         label="País"
         name="country"
         value={formData.country}
@@ -117,17 +88,19 @@ const AddressForm = ({
       />
 
       <Input
-        label="Referencia"
-        name="reference"
-        value={formData.reference}
+        label="Teléfono"
+        name="phone"
+        value={formData.phone}
         onChange={handleChange}
+        maxLength="10"
+        required
       />
 
       <div className="form-checkbox">
         <input
           type="checkbox"
-          name="default"
-          checked={formData.default}
+          name="isDefault"
+          checked={formData.isDefault}
           onChange={handleChange}
           id="defaultAddress"
         />
