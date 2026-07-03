@@ -119,6 +119,37 @@ describe("POST /api/orders", () => {
     expect(res.status).toBe(422);
   });
 
+  it("IT-ORD-014: 422 si address no es MongoId válido", async () => {
+    const customer = await createCustomer();
+    const cat = await createCategory();
+    const prod = await createProduct(cat._id, { price: 100, stock: 5 });
+    const payment = await PaymentMethod.create({ user: customer._id, type: "cash_on_delivery" });
+    const res = await request(app)
+      .post("/api/orders")
+      .set("Authorization", `Bearer ${tokenFor(customer)}`)
+      .send({
+        products: [{ productId: prod._id, quantity: 1, price: 100 }],
+        address: "not-a-mongo-id",
+        paymentMethod: payment._id,
+        totalPrice: 100,
+      });
+    expect(res.status).toBe(422);
+  });
+
+  it("IT-ORD-015: 422 si totalPrice falta", async () => {
+    const customer = await createCustomer();
+    const { prod, address, payment } = await scaffoldOrder(customer._id);
+    const res = await request(app)
+      .post("/api/orders")
+      .set("Authorization", `Bearer ${tokenFor(customer)}`)
+      .send({
+        products: [{ productId: prod._id, quantity: 1, price: 100 }],
+        address: address._id,
+        paymentMethod: payment._id,
+      });
+    expect(res.status).toBe(422);
+  });
+
   it("IT-ORD-009: 201 crea orden con datos válidos", async () => {
     const customer = await createCustomer();
     const { prod, address, payment } = await scaffoldOrder(customer._id);

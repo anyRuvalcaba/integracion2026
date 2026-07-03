@@ -40,6 +40,56 @@ describe("GET /api/cart", () => {
   });
 });
 
+// ─── GET /api/cart/:id (admin only) ──────────────────────────────────────────
+
+describe("GET /api/cart/:id", () => {
+  it("IT-CART-013: 401 sin token", async () => {
+    const fakeId = "64a9f2c3e4b0d1234567890a";
+    const res = await request(app).get(`/api/cart/${fakeId}`);
+    expect(res.status).toBe(401);
+  });
+
+  it("IT-CART-014: 403 con token de customer", async () => {
+    const customer = await createCustomer();
+    const fakeId = "64a9f2c3e4b0d1234567890a";
+    const res = await request(app)
+      .get(`/api/cart/${fakeId}`)
+      .set("Authorization", `Bearer ${tokenFor(customer)}`);
+    expect(res.status).toBe(403);
+  });
+
+  it("IT-CART-015: 404 si cart no existe", async () => {
+    const admin = await createAdmin();
+    const fakeId = "64a9f2c3e4b0d1234567890a";
+    const res = await request(app)
+      .get(`/api/cart/${fakeId}`)
+      .set("Authorization", `Bearer ${tokenFor(admin)}`);
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe("Cart not found");
+  });
+
+  it("IT-CART-016: 200 devuelve cart con user y products populados", async () => {
+    const admin = await createAdmin();
+    const customer = await createCustomer();
+    const cat = await createCategory();
+    const prod = await createProduct(cat._id);
+    const cart = await Cart.create({
+      user: customer._id,
+      products: [{ product: prod._id, quantity: 3 }],
+    });
+
+    const res = await request(app)
+      .get(`/api/cart/${cart._id}`)
+      .set("Authorization", `Bearer ${tokenFor(admin)}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body._id).toBe(cart._id.toString());
+    expect(res.body.user).toHaveProperty("_id", customer._id.toString());
+    expect(res.body.products[0].product).toHaveProperty("_id", prod._id.toString());
+    expect(res.body.products[0].quantity).toBe(3);
+  });
+});
+
 // ─── GET /api/cart/user/:id ───────────────────────────────────────────────────
 
 describe("GET /api/cart/user/:id", () => {
@@ -84,6 +134,29 @@ describe("POST /api/cart", () => {
   it("IT-CART-007: 401 sin token", async () => {
     const res = await request(app).post("/api/cart").send({});
     expect(res.status).toBe(401);
+  });
+
+  it("IT-CART-017: 422 si user no es MongoId válido", async () => {
+    const customer = await createCustomer();
+    const res = await request(app)
+      .post("/api/cart")
+      .set("Authorization", `Bearer ${tokenFor(customer)}`)
+      .send({ user: "not-a-mongo-id", products: [] });
+    expect(res.status).toBe(422);
+  });
+
+  it("IT-CART-018: 422 si quantity es 0", async () => {
+    const customer = await createCustomer();
+    const cat = await createCategory();
+    const prod = await createProduct(cat._id);
+    const res = await request(app)
+      .post("/api/cart")
+      .set("Authorization", `Bearer ${tokenFor(customer)}`)
+      .send({
+        user: customer._id,
+        products: [{ product: prod._id, quantity: 0 }],
+      });
+    expect(res.status).toBe(422);
   });
 
   it("IT-CART-008: 201 crea carrito con user y products", async () => {

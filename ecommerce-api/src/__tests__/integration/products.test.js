@@ -80,6 +80,17 @@ describe("GET /api/products/search", () => {
     expect(res.status).toBe(200);
     expect(res.body.products.every((p) => p.stock > 0)).toBe(true);
   });
+
+  it("IT-PROD-023: inStock=false solo devuelve productos con stock <= 0", async () => {
+    const cat = await createCategory();
+    await createProduct(cat._id, { stock: 0 });
+    await createProduct(cat._id, { stock: 15 });
+
+    const res = await request(app).get("/api/products/search?inStock=false");
+    expect(res.status).toBe(200);
+    expect(res.body.products.length).toBeGreaterThanOrEqual(1);
+    expect(res.body.products.every((p) => p.stock <= 0)).toBe(true);
+  });
 });
 
 // ─── GET /api/products/:id ────────────────────────────────────────────────────

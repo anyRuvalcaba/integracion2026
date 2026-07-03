@@ -114,6 +114,35 @@ describe("PUT /api/users/:id", () => {
     expect(res.body.name).toBe("Nombre Nuevo");
     expect(res.body).not.toHaveProperty("password");
   });
+
+  it("IT-USR-014: 200 actualiza password — login con nueva contraseña funciona", async () => {
+    const admin = await createAdmin();
+    const customer = await createCustomer();
+
+    const res = await request(app)
+      .put(`/api/users/${customer._id}`)
+      .set("Authorization", `Bearer ${tokenFor(admin)}`)
+      .send({ password: "NuevaPass123!" });
+
+    expect(res.status).toBe(200);
+    expect(res.body).not.toHaveProperty("password");
+
+    const loginRes = await request(app)
+      .post("/api/auth/login")
+      .send({ email: customer.email, password: "NuevaPass123!" });
+    expect(loginRes.status).toBe(200);
+  });
+
+  it("IT-USR-015: 404 si el id no existe", async () => {
+    const admin = await createAdmin();
+    const fakeId = "64a9f2c3e4b0d1234567890a";
+    const res = await request(app)
+      .put(`/api/users/${fakeId}`)
+      .set("Authorization", `Bearer ${tokenFor(admin)}`)
+      .send({ name: "Alguien" });
+    expect(res.status).toBe(404);
+    expect(res.body.message).toBe("User not found");
+  });
 });
 
 // ─── DELETE /api/users/:id ────────────────────────────────────────────────────
