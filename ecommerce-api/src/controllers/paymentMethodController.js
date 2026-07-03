@@ -9,6 +9,16 @@ const getPaymentMethods = async (req, res, next) => {
   }
 };
 
+const getUserPaymentMethods = async (req, res, next) => {
+  try {
+    const userId = req.user.userId;
+    const paymentMethods = await PaymentMethod.find({ user: userId });
+    res.status(200).json(paymentMethods);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getPaymentMethodById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -115,6 +125,7 @@ const deletePaymentMethod = async (req, res, next) => {
 
 export {
   getPaymentMethods,
+  getUserPaymentMethods,
   getPaymentMethodById,
   createPaymentMethod,
   updatePaymentMethod,

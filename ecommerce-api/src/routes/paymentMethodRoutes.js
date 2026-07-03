@@ -2,6 +2,7 @@ import express from "express";
 import { body, param } from "express-validator";
 import {
   getPaymentMethods,
+  getUserPaymentMethods,
   getPaymentMethodById,
   createPaymentMethod,
   updatePaymentMethod,
@@ -67,6 +68,8 @@ const updatePaymentValidation = [
 ];
 
 router.get("/payment-methods", authMiddleware, isAdmin, getPaymentMethods);
+
+router.get("/payment-methods/me", authMiddleware, getUserPaymentMethods);
 
 router.get(
   "/payment-methods/:id",
