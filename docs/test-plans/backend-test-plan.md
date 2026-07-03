@@ -1,9 +1,9 @@
 # Plan de Pruebas — ecommerce-api
 
-**Versión:** 1.3.0
-**Fecha última ejecución:** 2026-06-25
+**Versión:** 1.4.0
+**Fecha última ejecución:** 2026-07-02
 **Stack de testing:** Vitest 4.1.9 · Supertest 7.2.2 · mongodb-memory-server 11.2.0
-**Estado global:** 169/169 tests pasan ✅
+**Estado global:** 180/180 tests pasan ✅
 
 ---
 
@@ -40,8 +40,7 @@ src/__tests__/
 - `fileParallelism: false` — archivos secuenciales, evita conflictos de conexión Mongoose
 - `pool: forks` — propagación de `process.env` desde `globalSetup` a workers
 - Cada archivo de integración llama `useTestDatabase()`: `beforeAll` conecta, `beforeEach` limpia colecciones, `afterAll` desconecta
-- Los bugs del proyecto se documentan con tests que verifican el comportamiento **actual** (no el esperado), marcados como "bug documentado"
-- **No se modifica código productivo** — los bugs quedan como ítems de backlog
+- Los bugs encontrados durante la suite fueron corregidos en producción (v1.3.0). No quedan bugs documentados pendientes en el backlog.
 
 ---
 
@@ -185,8 +184,9 @@ src/__tests__/
 | IT-PROD-020 | 403 customer token | DELETE /api/products/:id | 403 | ✅ PASA |
 | IT-PROD-021 | 204 sin body | DELETE /api/products/:id | 204 | ✅ PASA |
 | IT-PROD-022 | 404 id inexistente | DELETE /api/products/:id | 404 | ✅ PASA |
+| IT-PROD-023 | inStock=false filtra stock <= 0 | GET /api/products/search | 200 | ✅ PASA |
 
-**Resultado:** 22/22 ✅
+**Resultado:** 23/23 ✅
 
 ---
 
@@ -222,17 +222,23 @@ src/__tests__/
 | IT-CART-001 | 401 sin token | GET /api/cart | 401 | ✅ PASA |
 | IT-CART-002 | 403 customer token | GET /api/cart | 403 | ✅ PASA |
 | IT-CART-003 | 200 array (admin) | GET /api/cart | 200 | ✅ PASA |
+| IT-CART-013 | 401 sin token | GET /api/cart/:id | 401 | ✅ PASA |
+| IT-CART-014 | 403 customer token | GET /api/cart/:id | 403 | ✅ PASA |
+| IT-CART-015 | 404 cart inexistente | GET /api/cart/:id | 404 | ✅ PASA |
+| IT-CART-016 | 200 cart con user y products populados | GET /api/cart/:id | 200 | ✅ PASA |
 | IT-CART-004 | 401 sin token | GET /api/cart/user/:id | 401 | ✅ PASA |
 | IT-CART-005 | 404 sin carrito | GET /api/cart/user/:id | 404 | ✅ PASA |
 | IT-CART-006 | 200 user + products populados | GET /api/cart/user/:id | 200 | ✅ PASA |
+| IT-CART-017 | 422 user no es MongoId | POST /api/cart | 422 | ✅ PASA |
+| IT-CART-018 | 422 quantity = 0 | POST /api/cart | 422 | ✅ PASA |
 | IT-CART-007 | 401 sin token | POST /api/cart | 401 | ✅ PASA |
 | IT-CART-008 | 201 crea carrito | POST /api/cart | 201 | ✅ PASA |
 | IT-CART-009 | 200 actualiza productos | PUT /api/cart/:id | 200 | ✅ PASA |
 | IT-CART-010 | 404 id inexistente | PUT /api/cart/:id | 404 | ✅ PASA |
 | IT-CART-011 | 204 borra carrito | DELETE /api/cart/:id | 204 | ✅ PASA |
-| IT-CART-012 | 400 si no existe — bug doc (debería ser 404) | DELETE /api/cart/:id | 400 | ✅ PASA |
+| IT-CART-012 | 404 si no existe | DELETE /api/cart/:id | 404 | ✅ PASA |
 
-**Resultado:** 12/12 ✅
+**Resultado:** 18/18 ✅
 
 ---
 
@@ -248,13 +254,15 @@ src/__tests__/
 | IT-ORD-006 | 200 con relaciones populadas | GET /api/orders/:id | 200 | ✅ PASA |
 | IT-ORD-007 | 401 sin token | POST /api/orders | 401 | ✅ PASA |
 | IT-ORD-008 | 422 products vacío | POST /api/orders | 422 | ✅ PASA |
+| IT-ORD-014 | 422 address no es MongoId | POST /api/orders | 422 | ✅ PASA |
+| IT-ORD-015 | 422 totalPrice faltante | POST /api/orders | 422 | ✅ PASA |
 | IT-ORD-009 | 201 orden válida | POST /api/orders | 201 | ✅ PASA |
 | IT-ORD-010 | 401 sin token | PUT /api/orders/:id | 401 | ✅ PASA |
 | IT-ORD-011 | 422 status inválido | PUT /api/orders/:id | 422 | ✅ PASA |
 | IT-ORD-012 | 200 actualiza status y paymentStatus | PUT /api/orders/:id | 200 | ✅ PASA |
-| IT-ORD-013 | 204 si no existe — bug doc (debería ser 404) | PUT /api/orders/:id | 204 | ✅ PASA |
+| IT-ORD-013 | 404 si no existe | PUT /api/orders/:id | 404 | ✅ PASA |
 
-**Resultado:** 13/13 ✅
+**Resultado:** 15/15 ✅
 
 ---
 
@@ -271,12 +279,14 @@ src/__tests__/
 | IT-USR-007 | 422 email inválido | POST /api/users | 422 | ✅ PASA |
 | IT-USR-008 | 422 password < 6 chars | POST /api/users | 422 | ✅ PASA |
 | IT-USR-009 | 201 sin password en response | POST /api/users | 201 | ✅ PASA |
-| IT-USR-010 | 500 — bug: password no desestructurada en updateUser | PUT /api/users/:id | 500 | ✅ PASA |
+| IT-USR-010 | 200 actualiza sin requerir password | PUT /api/users/:id | 200 | ✅ PASA |
+| IT-USR-014 | 200 actualiza password — login con nueva contraseña funciona | PUT /api/users/:id | 200 | ✅ PASA |
+| IT-USR-015 | 404 id inexistente | PUT /api/users/:id | 404 | ✅ PASA |
 | IT-USR-011 | 401 sin token | DELETE /api/users/:id | 401 | ✅ PASA |
 | IT-USR-012 | 204 borra usuario | DELETE /api/users/:id | 204 | ✅ PASA |
 | IT-USR-013 | 404 id inexistente | DELETE /api/users/:id | 404 | ✅ PASA |
 
-**Resultado:** 13/13 ✅
+**Resultado:** 15/15 ✅
 
 ---
 
