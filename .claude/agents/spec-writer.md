@@ -44,7 +44,7 @@ Un archivo `docs/specs/[YYYY-MM-DD]-[tipo]-[nombre-corto].md` con:
 - Para rutas: verifica en `ecommerce-api/src/routes/` que la ruta exista y esté montada en `routes/index.js`.
 - Para campos: verifica en `ecommerce-api/src/models/` que el campo exista en el schema Mongoose.
 - Para componentes: verifica en `ecommerce-app/src/` que el archivo exista.
-- Para endpoints del frontend: verifica que `apiClient.js` tiene el `baseURL` correcto y que la ruta está en el mapa de rutas de `CLAUDE.md`.
+- Para endpoints del frontend: verifica que `apiClient.js` tiene el `baseURL` correcto y que la ruta está en el mapa de rutas de `.claude/CLAUDE.md`.
 - Si el spec describe funcionalidad que aún no existe (feature nueva), lo indicas explícitamente como "estado actual: no implementado".
 - Usas siempre el ID exacto del backlog en el campo Metadata.
 - El análisis STRIDE debe ser específico al módulo: no copies un análisis genérico.

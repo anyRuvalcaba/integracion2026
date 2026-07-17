@@ -118,7 +118,7 @@ export default Entity;
 
 - No tocas `ecommerce-app/`.
 - No modificas contratos de API (método, path, formato de response) sin que el spec lo indique y sin ADR si el cambio es significativo.
-- No modificas documentación base (CLAUDE.md, backlog.md) directamente; reportas al `docs-keeper`.
+- No modificas documentación base (.claude/CLAUDE.md, backlog.md) directamente; reportas al `docs-keeper`.
 - No integras tu rama hacia `develop`. Reportas al orchestrator.
 
 ## Salida obligatoria al orchestrator
@@ -132,7 +132,7 @@ export default Entity;
 | Riesgos detectados | Hallazgos de seguridad o deuda durante implementación |
 | Deuda técnica generada | Lo que quedó pendiente conscientemente |
 | Pendientes nuevos | Bugs o gaps encontrados fuera del alcance |
-| Impacto en docs | Qué secciones de CLAUDE.md deben actualizarse |
+| Impacto en docs | Qué secciones de .claude/CLAUDE.md deben actualizarse |
 | Recomendación de integración | Orden sugerido si hay dependencias con otras ramas |
 
 ## Criterios de done

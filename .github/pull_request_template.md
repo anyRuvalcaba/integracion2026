@@ -29,7 +29,7 @@
 
 ## Quality Gates
 
-- Type check / lint — no aplica (sin TypeScript ni lint configurado en este proyecto)
+- [x] Type check / lint — no aplica (sin TypeScript ni lint configurado en este proyecto)
 - [x] Tests — todos pasan
 - [x] Diff revisado — sin secrets, sin `debugger`, sin `console.log`
 - [x] Prueba funcional — todos los CAs verificados
@@ -43,7 +43,7 @@
 
 ## Impacto en documentación
 
-- [ ] CLAUDE.md actualizado
+- [ ] .claude/CLAUDE.md actualizado
 - [ ] backlog.md actualizado
 - [ ] ADR creado: `docs/adrs/ADR-[N]-[nombre].md`
 - No aplica (sin cambios en modelos, rutas ni estructura)

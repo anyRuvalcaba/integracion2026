@@ -26,10 +26,10 @@ Siempre, antes de que el orchestrator apruebe el entregable de cualquier subagen
 |-------|--------|
 | Código de la rama | Diff del trabajo del subagente |
 | Spec del pendiente | `docs/specs/` |
-| Mapa de rutas | `CLAUDE.md` §mapa-de-rutas |
-| Modelos Mongoose | `CLAUDE.md` §modelos o archivos en `src/models/` |
+| Mapa de rutas | `.claude/CLAUDE.md` §mapa-de-rutas |
+| Modelos Mongoose | `.claude/CLAUDE.md` §modelos o archivos en `src/models/` |
 | Dependencias instaladas | `ecommerce-api/package.json` y `ecommerce-app/package.json` |
-| Estructura de archivos | `CLAUDE.md` §estructura o exploración de `src/` |
+| Estructura de archivos | `.claude/CLAUDE.md` §estructura o exploración de `src/` |
 
 ---
 
@@ -50,14 +50,14 @@ Para cada `import X from "librería"`:
 
 ### 3. Rutas de API referenciadas desde el frontend
 Para cada llamada a `apiClient.get/post/put/delete("/ruta")`:
-- Verificar que la ruta existe en `CLAUDE.md` §mapa-de-rutas.
+- Verificar que la ruta existe en `.claude/CLAUDE.md` §mapa-de-rutas.
 - Verificar que la ruta está montada en `ecommerce-api/src/routes/index.js`.
-- Especial atención: `/api/addresses` NO estaba montado en el baseline. Si el pendiente no es T-015/T-016, cualquier referencia a esa ruta es un error.
+- `/api/addresses` ya está montado y documentado en `.claude/CLAUDE.md` §mapa-de-rutas — verifica siempre contra ese mapa, no contra una lista de IDs fija.
 - Si la ruta no existe ni es parte del pendiente actual → **HALLUCINATION**.
 
 ### 4. Nombres de campos en modelos Mongoose
 Para cada referencia a un campo de un modelo en controllers o contextos:
-- Verificar contra el schema en `CLAUDE.md` §modelos.
+- Verificar contra el schema en `.claude/CLAUDE.md` §modelos.
 - Checks críticos conocidos:
   - `Cart.products[].product` (no `productId`)
   - `req.user.userId` (no `req.user.id` ni `req.user._id`)

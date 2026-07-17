@@ -29,7 +29,7 @@ cat ecommerce-app/package.json | grep "librería"
 Si no está instalada y el pendiente no incluye instalarla → no usarla. Alternativa: usar lo que ya está instalado.
 
 ### VC-03 — No asumir contratos de API no definidos
-Antes de llamar a un endpoint desde el frontend, verificar en `CLAUDE.md` §mapa-de-rutas:
+Antes de llamar a un endpoint desde el frontend, verificar en `.claude/CLAUDE.md` §mapa-de-rutas:
 - ¿Existe la ruta?
 - ¿Está montada en `routes/index.js`?
 - ¿Qué nivel de auth requiere?

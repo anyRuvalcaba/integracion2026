@@ -27,7 +27,7 @@ Cuando el backend-builder o el frontend-builder reportan que su trabajo está li
 | Diff de la rama | Git diff contra develop |
 | Spec del pendiente | `docs/specs/` |
 | Checklist de DoD correspondiente | `.agents/checklists/backend-dod.md` o `frontend-dod.md` |
-| Patrones del proyecto | `CLAUDE.md` §patrones |
+| Patrones del proyecto | `.claude/CLAUDE.md` §patrones |
 
 ---
 

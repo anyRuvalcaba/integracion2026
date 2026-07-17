@@ -32,7 +32,7 @@ Para cualquier spec que incluya:
 | Campo | Fuente |
 |-------|--------|
 | Spec con sección de Decisiones de Diseño completa | `docs/specs/` |
-| Arquitectura actual | `CLAUDE.md` §arquitectura, §modelos, §mapa-de-rutas |
+| Arquitectura actual | `.claude/CLAUDE.md` §arquitectura, §modelos, §mapa-de-rutas |
 | ADRs existentes | `docs/adrs/` |
 
 ---
@@ -48,7 +48,7 @@ Para cualquier spec que incluya:
 ### Rutas y contratos de API
 - [ ] Las nuevas rutas siguen las convenciones: `router.method("/path", middlewares..., validators, validate, controller)`.
 - [ ] El nivel de auth (pública / auth / admin) es consistente con el patrón del módulo al que pertenece.
-- [ ] Los status codes siguen el estándar del proyecto (CLAUDE.md §convenciones).
+- [ ] Los status codes siguen el estándar del proyecto (.claude/CLAUDE.md §convenciones).
 - [ ] Si cambia el formato de response de una ruta existente → requiere ADR.
 
 ### Frontend y estado

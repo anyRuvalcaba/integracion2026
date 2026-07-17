@@ -23,8 +23,8 @@ El agente que implementó el pendiente no puede ejecutar `code-reviewer` ni `ant
 Cualquier cambio que afecte: un schema Mongoose, el contrato de una API existente, el manejo de estado del frontend, o la introducción de una nueva librería — requiere que `architecture-reviewer` cree un ADR antes de que comience la implementación.
 
 ### P-05 — Cada cambio debe actualizar spec/tests/docs
-- Si el cambio modifica un modelo: `docs-keeper` actualiza `CLAUDE.md` §modelos.
-- Si el cambio agrega o modifica una ruta: `docs-keeper` actualiza `CLAUDE.md` §mapa-de-rutas.
+- Si el cambio modifica un modelo: `docs-keeper` actualiza `.claude/CLAUDE.md` §modelos.
+- Si el cambio agrega o modifica una ruta: `docs-keeper` actualiza `.claude/CLAUDE.md` §mapa-de-rutas.
 - Si el cambio introduce nueva funcionalidad: `qa-test-designer` produce el plan de pruebas.
 - Si el cambio es un bugfix: el qa-test-designer revisa si el bug tenía cobertura de test (si no la tenía, se agrega).
 
@@ -67,7 +67,7 @@ Los subagentes no interrumpen al usuario directamente. El orchestrator decide si
 ## Protocolos de documentación
 
 ### P-12 — Documentar lo que existe, no lo que se planea
-`CLAUDE.md` y los specs documentan el estado real del código. No se documenta funcionalidad no implementada como si existiera.
+`.claude/CLAUDE.md` y los specs documentan el estado real del código. No se documenta funcionalidad no implementada como si existiera.
 
 ### P-13 — Los prompts sin consumir se archivan
 Los archivos de prompt que sirvieron para invocar a la IA pero no son documentación del sistema se mueven a `.archive/`. No viven mezclados con documentación real.

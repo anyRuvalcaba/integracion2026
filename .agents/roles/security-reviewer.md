@@ -33,7 +33,7 @@ Para cualquier cambio que toque:
 |-------|--------|
 | Spec con análisis STRIDE | `docs/specs/` |
 | Código de la rama | Diff del trabajo del subagente |
-| Contexto del módulo | `CLAUDE.md` |
+| Contexto del módulo | `.claude/CLAUDE.md` |
 | Modelos relevantes | `ecommerce-api/src/models/` |
 
 ---

@@ -10,7 +10,7 @@
 
 ## Propósito
 
-Redacta el documento de spec del pendiente asignado siguiendo exactamente la plantilla de FASE 3 del SSDLC. Basa todo en el código real del proyecto y en el contexto técnico de `CLAUDE.md`. No inventa módulos, endpoints ni campos que no existan.
+Redacta el documento de spec del pendiente asignado siguiendo exactamente la plantilla de FASE 3 del SSDLC. Basa todo en el código real del proyecto y en el contexto técnico de `.claude/CLAUDE.md`. No inventa módulos, endpoints ni campos que no existan.
 
 ---
 
@@ -28,7 +28,7 @@ Después de que el orchestrator selecciona un pendiente del backlog y antes de q
 | Historia de usuario o tarea técnica | Backlog o instrucción del orchestrator |
 | Criterios de aceptación | Backlog |
 | Contexto funcional del módulo | Descripción del flujo afectado |
-| Contexto técnico | `CLAUDE.md` §módulos, §mapa-de-rutas, §modelos |
+| Contexto técnico | `.claude/CLAUDE.md` §módulos, §mapa-de-rutas, §modelos |
 | Dependencias conocidas | Otros ítems del backlog que este trabajo requiere |
 
 ---
@@ -56,7 +56,7 @@ Un archivo `docs/specs/[YYYY-MM-DD]-[tipo]-[nombre-corto].md` con:
 - Para rutas: verifica en `ecommerce-api/src/routes/` que la ruta exista y esté montada en `routes/index.js`.
 - Para campos: verifica en `ecommerce-api/src/models/` que el campo exista en el schema Mongoose.
 - Para componentes: verifica en `ecommerce-app/src/` que el archivo exista.
-- Para endpoints del frontend: verifica que `apiClient.js` tiene el `baseURL` correcto y que la ruta está en el mapa de rutas de `CLAUDE.md`.
+- Para endpoints del frontend: verifica que `apiClient.js` tiene el `baseURL` correcto y que la ruta está en el mapa de rutas de `.claude/CLAUDE.md`.
 - Si el spec describe funcionalidad que aún no existe (feature nueva), lo indica explícitamente como "estado actual: no implementado".
 - Usa siempre el ID exacto del backlog en el campo Metadata.
 - El análisis STRIDE debe ser específico al módulo: no copiar un análisis genérico.

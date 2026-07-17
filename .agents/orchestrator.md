@@ -27,7 +27,7 @@ El orchestrator es el único agente con visibilidad completa del backlog, el bas
 |-------|--------|
 | Backlog aprobado | `docs/backlog.md` |
 | Estado del baseline | Tag `baseline/v1.0` en Git |
-| Contexto técnico del proyecto | `CLAUDE.md` |
+| Contexto técnico del proyecto | `.claude/CLAUDE.md` |
 | Documentación de specs | `docs/specs/` |
 | Entregables de subagentes | Reporte de salida de cada subagente |
 
@@ -49,7 +49,7 @@ El orchestrator es el único agente con visibilidad completa del backlog, el bas
 
 ### Al iniciar una sesión
 
-1. Leer `CLAUDE.md` y verificar que refleja el estado actual del código.
+1. Leer `.claude/CLAUDE.md` y verificar que refleja el estado actual del código.
 2. Leer `docs/backlog.md` y confirmar el estado de cada ítem.
 3. Seleccionar el siguiente pendiente según prioridad.
 4. Verificar que no hay ramas activas del mismo pendiente (evitar trabajo duplicado).
@@ -63,7 +63,7 @@ El orchestrator es el único agente con visibilidad completa del backlog, el bas
 4. Verificar consistencia con el baseline: código, docs y backlog.
 5. Detectar conflictos con otras ramas activas.
 6. Si todo pasa: preparar PR y ejecutar la integración.
-7. Invocar `docs-keeper` para actualizar CLAUDE.md y backlog.
+7. Invocar `docs-keeper` para actualizar .claude/CLAUDE.md y backlog.
 
 ---
 
@@ -95,5 +95,5 @@ El orchestrator es el único agente con visibilidad completa del backlog, el bas
 - El pendiente seleccionado está integrado en `develop`.
 - El spec tiene estado `DONE` con Resultados, Pendientes y Matriz de cierre completos.
 - El backlog en `docs/backlog.md` refleja el nuevo estado.
-- `CLAUDE.md` está actualizado si hubo cambio en modelos, rutas o estructura.
+- `.claude/CLAUDE.md` está actualizado si hubo cambio en modelos, rutas o estructura.
 - No hay ramas del pendiente cerrado sin mergear ni borrar.

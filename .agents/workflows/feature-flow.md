@@ -93,7 +93,7 @@ El orden es el de P-07 (`.agents/protocols/global-rules.md`). Cualquiera puede b
 
 ### 10. Orchestrator — Integración y Docs Keeper
 - Con `tech-reviewer` = APTO, mergea el PR a `develop`.
-- Invoca `docs-keeper`, que actualiza `CLAUDE.md` con los cambios del feature y `docs/backlog.md`, y commitea en `develop`.
+- Invoca `docs-keeper`, que actualiza `.claude/CLAUDE.md` con los cambios del feature y `docs/backlog.md`, y commitea en `develop`.
 
 ---
 
@@ -102,5 +102,5 @@ El orden es el de P-07 (`.agents/protocols/global-rules.md`). Cualquiera puede b
 - PR mergeado a `develop`.
 - Spec en estado `DONE` con todos los campos completos.
 - `docs/backlog.md` actualizado.
-- `CLAUDE.md` actualizado si hubo cambios en modelos, rutas o estructura.
+- `.claude/CLAUDE.md` actualizado si hubo cambios en modelos, rutas o estructura.
 - Sin ramas del feature abiertas sin mergear.

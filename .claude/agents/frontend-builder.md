@@ -98,7 +98,7 @@ export function getItems() {
 - `useAuth()` solo se puede usar dentro de `<AuthProvider>`.
 
 **Servicios:**
-- Los servicios que llaman a la API importan `apiClient` de `../services/apiClient.js`.
+- Los servicios que llaman a la API importan `apiClient` de `../services/apiClient` (sin extensión `.js` — CRA la resuelve automáticamente; la extensión explícita solo es obligatoria en el backend ESM).
 - `baseURL` de `apiClient.js` debe coincidir con el puerto real del backend (verifica `.env` del backend).
 - Los servicios que leen datos locales (`paymentService`, `shippingService`) son provisionales; al migrar a la API, deben reemplazarse completamente, no parchearse.
 
@@ -153,7 +153,7 @@ export function getItems() {
 | Riesgos detectados | Hallazgos durante implementación |
 | Deuda técnica generada | Pendiente conscientemente |
 | Pendientes nuevos | Bugs o gaps encontrados fuera del alcance |
-| Impacto en docs | Qué secciones de CLAUDE.md actualizar |
+| Impacto en docs | Qué secciones de .claude/CLAUDE.md actualizar |
 | Recomendación de integración | Dependencias con otras ramas activas |
 
 ## Criterios de done

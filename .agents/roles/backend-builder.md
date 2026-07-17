@@ -27,7 +27,7 @@ Cuando el spec está en estado `IN PROGRESS`, la rama está creada y el orchestr
 | ID del pendiente | Ej. T-009 |
 | Spec aprobado | `docs/specs/[fecha]-[tipo]-[nombre].md` |
 | Rama de trabajo | Ej. `bugfix/cart-populate-field` |
-| Contexto técnico | Sección relevante de `CLAUDE.md` |
+| Contexto técnico | Sección relevante de `.claude/CLAUDE.md` |
 | CAs verificables | Lista numerada del spec |
 | Restricciones de seguridad | Sección STRIDE del spec |
 | Dependencias conocidas | Módulos que este cambio afecta |
@@ -137,7 +137,7 @@ Antes de reportar al orchestrator que el trabajo está listo:
 
 - No toca `ecommerce-app/`.
 - No modifica contratos de API (método, path, formato de response) sin que el spec lo indique y sin ADR si el cambio es significativo.
-- No modifica documentación base (CLAUDE.md, backlog.md) directamente; reporta al docs-keeper.
+- No modifica documentación base (.claude/CLAUDE.md, backlog.md) directamente; reporta al docs-keeper.
 - No integra su rama hacia `develop`. Reporta al orchestrator.
 
 ---
@@ -153,7 +153,7 @@ Antes de reportar al orchestrator que el trabajo está listo:
 | Riesgos detectados | Hallazgos de seguridad o deuda durante implementación |
 | Deuda técnica generada | Lo que quedó pendiente conscientemente |
 | Pendientes nuevos | Bugs o gaps encontrados fuera del alcance |
-| Impacto en docs | Qué secciones de CLAUDE.md deben actualizarse |
+| Impacto en docs | Qué secciones de .claude/CLAUDE.md deben actualizarse |
 | Recomendación de integración | Orden sugerido si hay dependencias con otras ramas |
 
 ---

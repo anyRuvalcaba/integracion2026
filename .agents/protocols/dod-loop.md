@@ -25,7 +25,7 @@ Al final de cada ciclo de implementación, el orchestrator evalúa el DoD (`back
 | `security-reviewer` → BLOQUEADO | El implementador; si el hallazgo implica cambio de contrato/schema, primero `architecture-reviewer` (ADR) y luego el implementador |
 | `architecture-reviewer` → BLOQUEADO / ADR pendiente | `architecture-reviewer` crea el ADR; luego el implementador ajusta según la decisión documentada |
 | Spec sin `## Resultados` / `## Matriz de cierre` completos | El implementador que cerró el pendiente |
-| `CLAUDE.md` o `docs/backlog.md` desactualizado | `docs-keeper` |
+| `.claude/CLAUDE.md` o `docs/backlog.md` desactualizado | `docs-keeper` |
 | PR template con algún `FALTA: <dato>` | El orchestrator resuelve el dato faltante (consultando al implementador o al spec) y reintenta `pr-publisher` |
 | `tech-reviewer` (post-PR) → veredicto CAMBIOS | El implementador correspondiente al hallazgo señalado en el reporte |
 | `model:` faltante o `opus` hardcodeado en algún `.claude/agents/*.md` | El agente/persona que introdujo el archivo — corrige el frontmatter según `.claude/model-policy.md` |

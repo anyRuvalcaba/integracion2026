@@ -38,10 +38,10 @@ El `qa-test-designer` produce la especificación. Los agentes de ejecución (`.c
 | Campo | Fuente |
 |-------|--------|
 | Spec con CAs | `docs/specs/` |
-| Validadores del módulo | `CLAUDE.md` §validadores |
-| Rutas del módulo | `CLAUDE.md` §mapa-de-rutas |
-| Modelos relacionados | `CLAUDE.md` §modelos |
-| Contexto de auth | `CLAUDE.md` §autenticación |
+| Validadores del módulo | `.claude/CLAUDE.md` §validadores |
+| Rutas del módulo | `.claude/CLAUDE.md` §mapa-de-rutas |
+| Modelos relacionados | `.claude/CLAUDE.md` §modelos |
+| Contexto de auth | `.claude/CLAUDE.md` §autenticación |
 
 ---
 

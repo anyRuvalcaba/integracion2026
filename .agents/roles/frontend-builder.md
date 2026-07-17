@@ -27,7 +27,7 @@ Cuando el spec está en estado `IN PROGRESS`, la rama está creada y el orchestr
 | ID del pendiente | Ej. T-001 |
 | Spec aprobado | `docs/specs/[fecha]-[tipo]-[nombre].md` |
 | Rama de trabajo | Ej. `bugfix/auth-provider-missing` |
-| Contexto técnico | Sección frontend de `CLAUDE.md` |
+| Contexto técnico | Sección frontend de `.claude/CLAUDE.md` |
 | CAs verificables | Lista numerada del spec |
 | Restricciones de seguridad | Sección STRIDE del spec |
 
@@ -78,7 +78,7 @@ export function useEntity() {
 
 ### Patrón de servicio que llama a la API
 ```js
-import apiClient from "./apiClient.js";
+import apiClient from "./apiClient";
 
 const actionName = async (param) => {
   const response = await apiClient.method("/endpoint/" + param);
@@ -109,7 +109,7 @@ export function getItems() {
 - `useAuth()` solo se puede usar dentro de `<AuthProvider>`.
 
 **Servicios:**
-- Los servicios que llaman a la API importan `apiClient` de `../services/apiClient.js`.
+- Los servicios que llaman a la API importan `apiClient` de `../services/apiClient` (sin extensión `.js` — CRA la resuelve automáticamente; la extensión explícita solo es obligatoria en el backend ESM).
 - `baseURL` de `apiClient.js` debe coincidir con el puerto real del backend (verificar `.env` del backend).
 - Los servicios que leen datos locales (`paymentService`, `shippingService`) son provisionales; al migrar a la API, deben reemplazarse completamente, no parchearse.
 
@@ -173,7 +173,7 @@ export function getItems() {
 | Riesgos detectados | Hallazgos durante implementación |
 | Deuda técnica generada | Pendiente conscientemente |
 | Pendientes nuevos | Bugs o gaps encontrados fuera del alcance |
-| Impacto en docs | Qué secciones de CLAUDE.md actualizar |
+| Impacto en docs | Qué secciones de .claude/CLAUDE.md actualizar |
 | Recomendación de integración | Dependencias con otras ramas activas |
 
 ---

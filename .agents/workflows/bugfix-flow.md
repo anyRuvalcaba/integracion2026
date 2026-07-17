@@ -75,7 +75,7 @@ El spec de un bugfix es más breve que el de un feature pero igualmente obligato
 
 ### 7. Orchestrator — Integración
 - Con `tech-reviewer` = APTO, integra el PR a `develop`.
-- Invoca `docs-keeper` solo si el bugfix cambia documentación (un bugfix de comportamiento puro raramente cambia CLAUDE.md).
+- Invoca `docs-keeper` solo si el bugfix cambia documentación (un bugfix de comportamiento puro raramente cambia .claude/CLAUDE.md).
 
 ---
 

@@ -24,7 +24,7 @@
 
 - [ ] Los servicios que llaman a la API usan `apiClient` (no `fetch` directamente)
 - [ ] El `baseURL` de `apiClient.js` coincide con el puerto real del backend
-- [ ] No se llama a rutas que no existen en el backend (verificar `CLAUDE.md` §mapa-de-rutas)
+- [ ] No se llama a rutas que no existen en el backend (verificar `.claude/CLAUDE.md` §mapa-de-rutas)
 - [ ] Si el servicio lee un JSON local, está explícitamente marcado como provisional en el spec
 
 ## Auth y token

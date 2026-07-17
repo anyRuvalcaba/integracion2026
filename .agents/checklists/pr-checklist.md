@@ -41,7 +41,7 @@
 
 ## Después del merge
 
-- [ ] `docs-keeper` fue invocado para actualizar `CLAUDE.md` si hubo cambios en modelos, rutas o estructura
+- [ ] `docs-keeper` fue invocado para actualizar `.claude/CLAUDE.md` si hubo cambios en modelos, rutas o estructura
 - [ ] `docs/backlog.md` tiene el ítem marcado como integrado
 - [ ] La rama del pendiente fue borrada después del merge
 - [ ] No hay ramas activas del mismo pendiente sin mergear
