@@ -34,6 +34,11 @@
 - [ ] Los CAs están listados con su estado (cumplido / no cumplido)
 - [ ] Los quality gates están marcados en el checklist del PR
 
+## Después de abierto el PR (antes de mergear)
+
+- [ ] `tech-reviewer` reportó veredicto **APTO** (bloqueante)
+- [ ] Codex — segunda opinión consultiva revisada (no bloqueante, no impide merge)
+
 ## Después del merge
 
 - [ ] `docs-keeper` fue invocado para actualizar `CLAUDE.md` si hubo cambios en modelos, rutas o estructura

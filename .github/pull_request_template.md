@@ -1,8 +1,4 @@
-# PR Template
-
-> Copiar este contenido como body del PR. Reemplazar los valores entre corchetes.
-
----
+> Fuente canónica: `.agents/templates/pr-template.md`. Mantener sincronizados manualmente.
 
 ## Descripción
 
@@ -63,5 +59,3 @@
 ---
 
 *PR preparado por `orchestrator`. Agente implementador: `[nombre]`.*
-
-> Espejo publicado en GitHub: `.github/pull_request_template.md`. Mantener sincronizados manualmente.
