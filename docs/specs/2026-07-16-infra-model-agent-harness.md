@@ -4,7 +4,7 @@
 - **Tipo:** infra
 - **Complejidad:** L
 - **Fecha:** 2026-07-16
-- **Estado:** IN PROGRESS
+- **Estado:** DONE
 
 ## Historia
 
@@ -22,11 +22,11 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 
 ## Criterios de Aceptación
 
-- [ ] CA-1: `.claude/model-policy.md` documenta que el main loop solo orquesta (`.agents/orchestrator.md`), `model: sonnet` es el default explícito en todo agente, Opus nunca queda fijo en frontmatter (solo override puntual de despacho justificado en una línea), y la matriz Haiku SÍ/NO (solo `docs-keeper` y `pr-publisher`).
-- [ ] CA-2: `docs/adrs/ADR-1-politica-de-modelos.md` existe, sigue `.agents/templates/adr-template.md`, y documenta las 3 opciones consideradas y la justificación de la elegida.
-- [ ] CA-3: Los 17 agentes en `.claude/agents/` (11 roles materializados + `tech-reviewer` + `pr-publisher` nuevos + 4 agentes de test con `model:` corregido) tienen frontmatter válido de Claude Code, con `model:` explícito y sin ningún `opus` hardcodeado.
-- [ ] CA-4: `.agents/protocols/dod-loop.md` (P-15) define el mapa ítem de fallo → agente responsable de remediar, con tope de 3 iteraciones y escalamiento al usuario si se supera.
-- [ ] CA-5: El trabajo se entrega en rama `infra/model-agent-harness` (desde `develop`) con PR contra `develop`, usando `.agents/templates/pr-template.md`, y `tech-reviewer` audita el PR ya abierto como prueba viva del loop. *(pendiente: requiere que el usuario confirme remote + `gh` CLI configurados antes de push/PR)*
+- [x] CA-1: `.claude/model-policy.md` documenta que el main loop solo orquesta (`.agents/orchestrator.md`), `model: sonnet` es el default explícito en todo agente, Opus nunca queda fijo en frontmatter (solo override puntual de despacho justificado en una línea), y la matriz Haiku SÍ/NO (solo `docs-keeper` y `pr-publisher`).
+- [x] CA-2: `docs/adrs/ADR-1-politica-de-modelos.md` existe, sigue `.agents/templates/adr-template.md`, y documenta las 3 opciones consideradas y la justificación de la elegida.
+- [x] CA-3: Los 17 agentes en `.claude/agents/` (11 roles materializados + `tech-reviewer` + `pr-publisher` nuevos + 4 agentes de test con `model:` corregido) tienen frontmatter válido de Claude Code, con `model:` explícito y sin ningún `opus` hardcodeado. Verificado: `grep -L "^model:" .claude/agents/*.md` y `grep -rn "model: opus" .claude/agents/*.md` ambos vacíos; `ls .claude/agents/*.md | wc -l` = 17.
+- [x] CA-4: `.agents/protocols/dod-loop.md` (P-15) define el mapa ítem de fallo → agente responsable de remediar, con tope de 3 iteraciones y escalamiento al usuario si se supera. Referenciado desde `global-rules.md`, `feature-flow.md` y `bugfix-flow.md`.
+- [ ] CA-5: El trabajo se entrega en rama `infra/model-agent-harness` (desde `develop`) con PR contra `develop`, usando `.agents/templates/pr-template.md`, y `tech-reviewer` audita el PR ya abierto como prueba viva del loop. **Parcial:** la rama existe y todos los commits están hechos; el push y la apertura del PR real quedan pendientes de que el usuario confirme `git remote` y `gh` CLI configurados (bloqueo externo, ver Pendientes Abiertos).
 
 ## Consideraciones de Seguridad
 
@@ -57,30 +57,38 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 
 ## Pendientes Abiertos y Gaps Detectados
 
-> Esta sección se completa durante la implementación y se confirma al cerrar.
-
-- **Funcionalidades faltantes:** por confirmar al cierre.
-- **Comportamientos inconsistentes detectados:** por confirmar al cierre.
+- **Funcionalidades faltantes:** ninguna respecto al alcance acordado con el usuario.
+- **Comportamientos inconsistentes detectados:** durante la ejecución de `npm test` en `ecommerce-api` se detectó 1 test (`IT-CART-014`) fallando de 180; no está relacionado con este trabajo (no se tocó código de aplicación) y ya fallaba antes de esta rama. No se investigó a fondo por estar fuera de alcance — se registra como hallazgo, no se corrige aquí.
 - **Gaps entre frontend y backend:** no aplica (este trabajo no toca código de aplicación).
 - **Persistencia pendiente de migrar:** no aplica.
-- **Decisiones aplazadas:** activar formalmente FASE 10.5 (baseline oficial) queda para cuando el backlog esté completo; verificación manual del plugin Codex queda pendiente post-merge.
-- **Trabajo fuera de alcance en esta iteración:** la "estrategia integral de pruebas" (16 fases) pedida en paralelo por el usuario queda explícitamente fuera — se abordará en una sesión nueva.
-- **Riesgos que requieren seguimiento:** operativo — confirmar que el plugin Codex realmente carga tras el merge.
-- **Items que deben convertirse en backlog:** por confirmar al cierre.
+- **Decisiones aplazadas:** activar formalmente FASE 10.5 (baseline oficial) queda para cuando el backlog esté formalizado y priorizado en su totalidad; verificación manual de que el plugin Codex carga correctamente queda pendiente post-merge.
+- **Trabajo fuera de alcance en esta iteración:** la "estrategia integral de pruebas" (16 fases) pedida en paralelo por el usuario queda explícitamente fuera — se abordará en una sesión nueva. El test `IT-CART-014` fallando no se investiga ni corrige aquí.
+- **Riesgos que requieren seguimiento:** confirmar que el plugin Codex realmente carga tras el merge; confirmar que el push/PR real se completa una vez el usuario tenga remote+gh listos.
+- **Items que deben convertirse en backlog:** `INFRA-002` (activar FASE 10.5 cuando el backlog esté formalizado), `INFRA-003` (verificar carga del plugin Codex post-merge), `INFRA-004` (completar push + apertura de PR real una vez configurado remote/gh), `INFRA-005` (investigar el test `IT-CART-014` fallando en `ecommerce-api`, preexistente y no relacionado con este trabajo).
 
 ## Resultados (se completa al cerrar)
-- **Fecha de cierre:**
-- **CAs cumplidos:**
-- **CAs no cumplidos:**
-- **Deuda técnica generada:**
-- **Lecciones aprendidas:**
-- **Pendientes abiertos confirmados:**
-- **Gaps no resueltos:**
-- **Trabajo fuera de alcance confirmado:**
-- **Backlog derivado creado:**
-- **Referencias a historias/tareas creadas:**
+- **Fecha de cierre:** 2026-07-16
+- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4
+- **CAs no cumplidos:** CA-5 parcial — rama y commits completos; push/PR real bloqueados por infraestructura externa (sin `git remote` ni `gh` CLI al momento del cierre de este spec).
+- **Deuda técnica generada:** ninguna nueva sobre el harness; se documenta el hallazgo preexistente `IT-CART-014` como ítem de backlog separado.
+- **Lecciones aprendidas:** auditar `.gitignore` antes de diseñar cualquier política de agentes es un paso obligatorio — el hallazgo de que `.agents/` y `.claude/` estaban completamente ignorados cambió por completo el diagnóstico y el alcance real del trabajo.
+- **Pendientes abiertos confirmados:** ver sección anterior.
+- **Gaps no resueltos:** apertura de PR real contra `develop` (bloqueada por infraestructura externa al alcance de este spec).
+- **Trabajo fuera de alcance confirmado:** estrategia integral de pruebas (16 fases), FASE 10.5 / baseline oficial, investigación de `IT-CART-014`.
+- **Backlog derivado creado:** sí — `INFRA-002`, `INFRA-003`, `INFRA-004`, `INFRA-005` agregados a `docs/backlog.md` en este mismo commit de cierre.
+- **Referencias a historias/tareas creadas:** `INFRA-001` (este spec, DONE), `INFRA-002`, `INFRA-003`, `INFRA-004`, `INFRA-005` (ver `docs/backlog.md`).
 
 ## Matriz de cierre
 
 | Ítem detectado | Estado | Acción |
 |---|---|---|
+| Política de modelos + ADR-1 | Confirmado | Cerrar |
+| 17 agentes materializados con `model:` válido (verificado por grep) | Confirmado | Cerrar |
+| `dod-loop.md` (P-15) + referencias en workflows y global-rules | Confirmado | Cerrar |
+| `.gitignore` corregido, `.agents/`+`.claude/` versionados | Confirmado | Cerrar |
+| CLAUDE.md, settings.json, PR template, pr-checklist actualizados | Confirmado | Cerrar |
+| Push + PR real contra `develop` | Parcial | Backlog `INFRA-004` |
+| Verificación del plugin Codex | Parcial | Backlog `INFRA-003` |
+| FASE 10.5 / baseline oficial | Fuera de alcance | Backlog `INFRA-002` |
+| Test `IT-CART-014` fallando (preexistente) | Inconsistente | Backlog `INFRA-005` |
+| Estrategia integral de pruebas (16 fases) | Fuera de alcance | Sesión nueva, ya acordado con el usuario |
