@@ -4,7 +4,7 @@
 - **Tipo:** infra
 - **Complejidad:** L
 - **Fecha:** 2026-07-16
-- **Estado:** DONE
+- **Estado:** IN PROGRESS (CA-1 a CA-4 cumplidos; CA-5 en remediación tras veredicto CAMBIOS de `tech-reviewer` en PR #1)
 
 ## Historia
 
@@ -26,7 +26,7 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 - [x] CA-2: `docs/adrs/ADR-1-politica-de-modelos.md` existe, sigue `.agents/templates/adr-template.md`, y documenta las 3 opciones consideradas y la justificación de la elegida.
 - [x] CA-3: Los 17 agentes en `.claude/agents/` (11 roles materializados + `tech-reviewer` + `pr-publisher` nuevos + 4 agentes de test con `model:` corregido) tienen frontmatter válido de Claude Code, con `model:` explícito y sin ningún `opus` hardcodeado. Verificado: `grep -L "^model:" .claude/agents/*.md` y `grep -rn "model: opus" .claude/agents/*.md` ambos vacíos; `ls .claude/agents/*.md | wc -l` = 17.
 - [x] CA-4: `.agents/protocols/dod-loop.md` (P-15) define el mapa ítem de fallo → agente responsable de remediar, con tope de 3 iteraciones y escalamiento al usuario si se supera. Referenciado desde `global-rules.md`, `feature-flow.md` y `bugfix-flow.md`.
-- [ ] CA-5: El trabajo se entrega en rama `infra/model-agent-harness` (desde `develop`) con PR contra `develop`, usando `.agents/templates/pr-template.md`, y `tech-reviewer` audita el PR ya abierto como prueba viva del loop. **Actualizado 2026-07-16:** el usuario configuró `git remote` y `gh auth login`; `main`, `develop` e `infra/model-agent-harness` ya están pusheados a `origin`. Queda pendiente únicamente la apertura del PR (vía `pr-publisher`) y la auditoría de `tech-reviewer` sobre ese PR — en curso en este mismo ciclo.
+- [ ] CA-5: El trabajo se entrega en rama `infra/model-agent-harness` (desde `develop`) con PR contra `develop`, usando `.agents/templates/pr-template.md`, y `tech-reviewer` audita el PR ya abierto como prueba viva del loop. **Actualizado 2026-07-17:** PR #1 abierto (https://github.com/anyRuvalcaba/integracion2026/pull/1). `tech-reviewer` corrió y reportó **CAMBIOS** (no APTO): (1) el quality gate de tests backend en el body del PR decía "179/180" pero la ejecución real de `tech-reviewer` dio 180/180 — corregido a reflejar flakiness observada en `IT-CART-014`; (2) `pr-publisher` había marcado este mismo CA-5 como cumplido antes de que la auditoría de `tech-reviewer` existiera — se deja sin marcar hasta que una segunda pasada de `tech-reviewer` confirme APTO; (3) este spec declaraba `Estado: DONE` con CA-5 abierto — corregido. En remediación, pendiente de segunda pasada de `tech-reviewer`.
 
 ## Consideraciones de Seguridad
 
@@ -58,24 +58,25 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 ## Pendientes Abiertos y Gaps Detectados
 
 - **Funcionalidades faltantes:** ninguna respecto al alcance acordado con el usuario.
-- **Comportamientos inconsistentes detectados:** durante la ejecución de `npm test` en `ecommerce-api` se detectó 1 test (`IT-CART-014`) fallando de 180; no está relacionado con este trabajo (no se tocó código de aplicación) y ya fallaba antes de esta rama. No se investigó a fondo por estar fuera de alcance — se registra como hallazgo, no se corrige aquí.
+- **Comportamientos inconsistentes detectados:** el test `IT-CART-014` de `ecommerce-api` dio resultados distintos en dos ejecuciones reales sobre el mismo commit (179/180 con esa prueba fallando, y luego 180/180 pasando) — indica flakiness, no una falla consistente. `docs/test-plans/backend-test-plan.md` (preexistente) lo documenta como estable en 180/180. No relacionado con este trabajo (no se tocó código de aplicación); no se investigó a fondo por estar fuera de alcance.
 - **Gaps entre frontend y backend:** no aplica (este trabajo no toca código de aplicación).
 - **Persistencia pendiente de migrar:** no aplica.
 - **Decisiones aplazadas:** activar formalmente FASE 10.5 (baseline oficial) queda para cuando el backlog esté formalizado y priorizado en su totalidad; verificación manual de que el plugin Codex carga correctamente queda pendiente post-merge.
 - **Trabajo fuera de alcance en esta iteración:** la "estrategia integral de pruebas" (16 fases) pedida en paralelo por el usuario queda explícitamente fuera — se abordará en una sesión nueva. El test `IT-CART-014` fallando no se investiga ni corrige aquí.
 - **Riesgos que requieren seguimiento:** confirmar que el plugin Codex realmente carga tras el merge; confirmar que el push/PR real se completa una vez el usuario tenga remote+gh listos.
-- **Items que deben convertirse en backlog:** `INFRA-002` (activar FASE 10.5 cuando el backlog esté formalizado), `INFRA-003` (verificar carga del plugin Codex post-merge), `INFRA-004` (completar push + apertura de PR real una vez configurado remote/gh), `INFRA-005` (investigar el test `IT-CART-014` fallando en `ecommerce-api`, preexistente y no relacionado con este trabajo).
+- **Items que deben convertirse en backlog:** `INFRA-002` (activar FASE 10.5 cuando el backlog esté formalizado), `INFRA-003` (verificar carga del plugin Codex post-merge), `INFRA-004` (completar la integración del PR una vez `tech-reviewer` reporte APTO), `INFRA-005` (investigar la posible flakiness de `IT-CART-014` en `ecommerce-api`, no relacionado con este trabajo).
 
-## Resultados (se completa al cerrar)
-- **Fecha de cierre:** 2026-07-17
-- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4. CA-5 casi completo: rama, commits y push ya realizados; solo falta la apertura formal del PR (en curso, siguiente paso de este mismo ciclo vía `pr-publisher` + `tech-reviewer`).
-- **Deuda técnica generada:** ninguna nueva sobre el harness tras 3 rondas de `anti-hallucination-reviewer` y 2 de `code-reviewer` (loop P-15). Se documentan 5 bugs reales preexistentes en la aplicación (`BUG-001` a `BUG-005`, descubiertos como efecto colateral de la auditoría) y el test `IT-CART-014` como ítems de backlog separados, fuera del alcance de este pendiente.
-- **Lecciones aprendidas:** (1) auditar `.gitignore` antes de diseñar cualquier política de agentes es obligatorio — el hallazgo de que `.agents/` y `.claude/` estaban completamente ignorados cambió el diagnóstico del problema real. (2) El loop P-15 funcionó como se diseñó: `code-reviewer` y `anti-hallucination-reviewer` encontraron contradicciones reales (orden de revisores invertido, runner de tests equivocado, rutas inexistentes, datos desactualizados en CLAUDE.md, tabla de bugs stale violando P-14) en 3 rondas hasta APROBADO — incluyendo un caso donde el fix de la ronda 1 quedó incompleto (corregido solo en una de dos copias espejo) y la ronda 2 lo detectó.
+## Resultados (se completa al cerrar — pendiente de segunda pasada de `tech-reviewer`)
+- **Fecha de cierre:** pendiente (no cerrado — ver Estado en Metadata).
+- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4.
+- **CAs no cumplidos:** CA-5 — PR #1 abierto, `tech-reviewer` reportó CAMBIOS en su primera pasada (quality gate de tests con dato incorrecto, CA-5 marcado prematuramente por `pr-publisher`, spec declarado DONE con CA-5 abierto). En remediación.
+- **Deuda técnica generada:** ninguna nueva sobre el harness tras 3 rondas de `anti-hallucination-reviewer` y 2 de `code-reviewer` (loop P-15) en la fase pre-PR. Se documentan 5 bugs reales preexistentes en la aplicación (`BUG-001` a `BUG-005`, descubiertos como efecto colateral de la auditoría) y la posible flakiness de `IT-CART-014` como ítems de backlog separados, fuera del alcance de este pendiente.
+- **Lecciones aprendidas:** (1) auditar `.gitignore` antes de diseñar cualquier política de agentes es obligatorio. (2) El loop P-15 funcionó como se diseñó en la fase pre-PR: `code-reviewer` y `anti-hallucination-reviewer` encontraron contradicciones reales en 3 rondas hasta APROBADO. (3) `tech-reviewer` (fase post-PR) también encontró hallazgos reales que la fase pre-PR no pudo detectar por diseño: un dato de quality gate incorrecto por flakiness de un test, y un checkbox marcado antes de que su propia evidencia existiera — confirma que la separación pre-PR/post-PR del loop tiene valor real, no es redundante.
 - **Pendientes abiertos confirmados:** ver sección anterior.
-- **Gaps no resueltos:** ninguno bloqueante — la apertura del PR es el siguiente paso inmediato de este mismo ciclo, no un gap diferido.
+- **Gaps no resueltos:** CA-5 abierto, en remediación activa dentro de este mismo ciclo.
 - **Trabajo fuera de alcance confirmado:** estrategia integral de pruebas (16 fases), FASE 10.5 / baseline oficial, investigación de `IT-CART-014` y de los 5 bugs de aplicación descubiertos (`BUG-001` a `BUG-005`).
 - **Backlog derivado creado:** sí — `INFRA-002` a `INFRA-007` y `BUG-001` a `BUG-005` agregados a `docs/backlog.md`.
-- **Referencias a historias/tareas creadas:** `INFRA-001` (este spec, DONE), `INFRA-002` a `INFRA-007`, `BUG-001` a `BUG-005` (ver `docs/backlog.md`).
+- **Referencias a historias/tareas creadas:** `INFRA-001` (este spec), `INFRA-002` a `INFRA-007`, `BUG-001` a `BUG-005` (ver `docs/backlog.md`).
 
 ## Matriz de cierre
 
@@ -88,10 +89,11 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 | CLAUDE.md, settings.json, PR template, pr-checklist actualizados | Confirmado | Cerrar |
 | `anti-hallucination-reviewer` (3 rondas) + `code-reviewer` (2 rondas) | Confirmado — APROBADO | Cerrar |
 | Push de `main`/`develop`/`infra/model-agent-harness` | Confirmado | Cerrar |
-| Apertura de PR real contra `develop` + auditoría de `tech-reviewer` | En curso | Continúa en este mismo ciclo |
+| PR #1 abierto contra `develop` | Confirmado | Cerrar |
+| Auditoría de `tech-reviewer` sobre PR #1 | Parcial — 1ª pasada CAMBIOS | En remediación, 2ª pasada en curso |
 | Verificación del plugin Codex | Parcial | Backlog `INFRA-003` |
 | FASE 10.5 / baseline oficial | Fuera de alcance | Backlog `INFRA-002` |
-| Test `IT-CART-014` fallando (preexistente) | Inconsistente | Backlog `INFRA-005` |
+| Test `IT-CART-014` con resultado inconsistente entre corridas | Inconsistente | Backlog `INFRA-005` |
 | `.env.example` PORT desalineado | Inconsistente | Backlog `INFRA-006` |
 | Limpieza cosmética residual de referencias | Parcial | Backlog `INFRA-007` |
 | 5 bugs de aplicación descubiertos durante la auditoría (`AuthProvider`, `CartContext`, `errorHandler`, `cartController`) | Inconsistente | Backlog `BUG-001` a `BUG-005` |
