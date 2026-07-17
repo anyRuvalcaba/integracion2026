@@ -1,0 +1,124 @@
+Quiero que actúes como un Staff Engineer + Product Architect + experto en SSDLC.
+
+Voy a darte mi documento actual de protocolo SSDLC. Tu tarea NO es resumirlo ni comentarlo por encima. Tu tarea es REESCRIBIRLO y AJUSTARLO directamente para corregir un hueco operativo importante:
+
+PROBLEMA A CORREGIR
+Actualmente el protocolo permite cerrar la parte documental/spec aunque no quede documentado de forma explícita todo lo que falta, lo que quedó parcial, lo inconsistente, lo fuera de alcance y lo que debe convertirse en backlog posterior.
+
+Quiero que modifiques el SSDLC para que:
+1. al cerrar un spec/documentación,
+2. sea obligatorio registrar lo faltante,
+3. sea obligatorio registrar gaps detectados,
+4. sea obligatorio registrar lo fuera de alcance,
+5. sea obligatorio convertir eso en backlog accionable,
+6. y quede listo para que después esos pendientes se trabajen en modo subagente.
+
+OBJETIVO DEL AJUSTE
+Quiero que el protocolo ya no permita un cierre “bonito pero incompleto”.
+Quiero un cierre documental que deje trazabilidad operativa real sobre:
+- qué sí quedó,
+- qué no quedó,
+- qué quedó parcial,
+- qué está inconsistente,
+- qué se difiere,
+- y qué sigue después.
+
+INSTRUCCIONES DE EDICIÓN
+Debes trabajar SOBRE el documento actual y devolverme una versión mejorada del SSDLC, conservando su estilo, tono, estructura y disciplina operativa.
+
+Haz estos cambios de forma explícita:
+
+### CAMBIO 1 — Ajustar la plantilla del spec en FASE 3
+En la estructura del spec, agrega una nueva sección obligatoria ANTES de “Resultados” llamada exactamente:
+
+## Pendientes Abiertos y Gaps Detectados
+
+Esa sección debe incluir como mínimo:
+- Funcionalidades faltantes
+- Comportamientos inconsistentes detectados
+- Gaps entre frontend y backend
+- Persistencia pendiente de migrar
+- Decisiones aplazadas
+- Trabajo fuera de alcance en esta iteración
+- Riesgos que requieren seguimiento
+- Items que deben convertirse en backlog
+
+### CAMBIO 2 — Expandir la sección “Resultados”
+La sección actual “## Resultados (se completa al cerrar)” debe quedar ampliada para incluir:
+- Fecha de cierre
+- CAs cumplidos
+- CAs no cumplidos
+- Deuda técnica generada
+- Lecciones aprendidas
+- Pendientes abiertos confirmados
+- Gaps no resueltos
+- Trabajo fuera de alcance confirmado
+- Backlog derivado creado: sí | no
+- Referencias a historias/tareas creadas
+
+### CAMBIO 3 — Reescribir FASE 10
+La FASE 10 debe dejar de ser solo “cerrar el spec”.
+Debe convertirse en una fase de cierre documental estricto.
+
+Debe obligar a:
+1. cambiar estado a DONE o REJECTED,
+2. completar Resultados,
+3. completar o actualizar “Pendientes Abiertos y Gaps Detectados”,
+4. registrar explícitamente todo lo que NO se resolvió,
+5. convertir cada pendiente accionable en backlog,
+6. impedir que el spec/documentación se considere cerrado si no existe backlog derivado.
+
+Incluye una regla fuerte como esta, redactada de forma profesional:
+“La fase documental no se considera cerrada hasta que los pendientes abiertos, gaps detectados y trabajo fuera de alcance hayan quedado explícitamente documentados y convertidos en backlog accionable cuando corresponda.”
+
+### CAMBIO 4 — Agregar una matriz de cierre
+Agrega una pequeña sección reusable al cierre del spec llamada:
+
+## Matriz de cierre
+
+Con esta lógica:
+| Item detectado | Estado | Acción |
+|---|---|---|
+| Implementado | Confirmado | Cerrar |
+| Parcial | Requiere seguimiento | Crear backlog |
+| Inconsistente | Riesgo | Crear backlog |
+| Fuera de alcance | Aplazado | Crear backlog o archivar |
+| Obsoleto | No aplica | Archivar o eliminar |
+
+### CAMBIO 5 — Preparar transición a modo subagente
+Sin reescribir todo el protocolo, agrega una regla clara que diga que, una vez cerrada la documentación/spec y consolidado el backlog derivado, los pendientes posteriores podrán trabajarse en modo subagente.
+
+Pero debe quedar clarísimo que:
+- los subagentes no trabajarán sobre “ideas sueltas”,
+- solo trabajarán sobre pendientes formalmente registrados,
+- y no pueden inventar alcance nuevo; solo escalar hallazgos.
+
+Incluye una frase equivalente a:
+“Una vez cerrada la documentación y consolidado el backlog derivado, los subagentes trabajarán únicamente sobre pendientes formalmente registrados. Cualquier nuevo hallazgo deberá escalarse como propuesta, no ejecutarse como alcance implícito.”
+
+### CAMBIO 6 — Mantener consistencia editorial
+No quiero parches torpes.
+No quiero texto repetido.
+No quiero contradicciones.
+No quiero que metas lenguaje más informal que el documento actual.
+Quiero que el resultado parezca una evolución natural del SSDLC original.
+
+## FORMA DE RESPONDER
+Devuélveme la respuesta en este formato exacto:
+
+# 1. Diagnóstico del hueco actual
+Explica brevemente qué estaba faltando en el SSDLC original.
+
+# 2. Cambios propuestos
+Lista concreta de los cambios que aplicarás.
+
+# 3. SSDLC corregido
+Entrégame el texto completo ya reescrito, listo para reemplazar el original.
+
+## REGLAS IMPORTANTES
+- No resumir el documento.
+- No dar recomendaciones abstractas.
+- No limitarte a decir “agrega una sección”.
+- Debes devolver el texto final ya modificado.
+- Conserva el espíritu SSDLC original.
+- Sé estricto con la trazabilidad y el cierre operativo.
