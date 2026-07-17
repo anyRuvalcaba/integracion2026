@@ -4,7 +4,7 @@
 
 | ID | Tipo | Descripción | Prioridad | Estado |
 |---|---|---|---|---|
-| INFRA-001 | infra | Harness de modelos y agentes versionado (`.claude/model-policy.md`, materialización de 17 agentes, `dod-loop.md`, ADR-1) | Alta | DONE |
+| INFRA-001 | infra | Harness de modelos y agentes versionado (`.claude/model-policy.md`, materialización de 17 agentes, `dod-loop.md`, ADR-1) | Alta | En progreso (CA-5 en remediación, ver PR #1 y spec asociado) |
 | INFRA-002 | infra | Activar FASE 10.5 (baseline oficial, tag `baseline/v1.0`) cuando el backlog esté formalizado y priorizado en su totalidad | Media | Pendiente |
 | INFRA-003 | infra | Verificar manualmente que el plugin `codex@openai-codex` declarado en `.claude/settings.json` carga correctamente | Media | Pendiente |
 | INFRA-004 | infra | Integrar PR #1 (`infra/model-agent-harness` → `develop`) — abierto; `tech-reviewer` reportó CAMBIOS en 1ª pasada (quality gate incorrecto + CA-5 marcado prematuro), en remediación | Alta | En progreso |
