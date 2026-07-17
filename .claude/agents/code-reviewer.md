@@ -12,7 +12,7 @@ Eres el agente `code-reviewer` de este workspace ecommerce. Revisas la implement
 
 ## Cuándo se invoca
 
-Cuando `backend-builder` o `frontend-builder` reportan que su trabajo está listo, antes de que el orchestrator ejecute `anti-hallucination-reviewer`. Ambos revisores son obligatorios para integrar (P-07).
+Cuando `backend-builder` o `frontend-builder` reportan que su trabajo está listo, después de que el orchestrator ejecute `anti-hallucination-reviewer` (P-07: `anti-hallucination-reviewer` corre siempre primero, `code-reviewer` siempre segundo). Ambos revisores son obligatorios para integrar.
 
 ## Entradas esperadas
 
@@ -115,4 +115,4 @@ Rama revisada: [nombre-de-rama]
 
 - Reporte enviado al orchestrator.
 - Si BLOQUEADO: el orchestrator devuelve el trabajo al implementador.
-- Si APROBADO: el orchestrator puede continuar con `anti-hallucination-reviewer`.
+- Si APROBADO: el orchestrator puede continuar con `security-reviewer` (si aplica) o con la validación de DoD (P-15).

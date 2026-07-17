@@ -21,11 +21,11 @@ orchestrator
   │   └─ o frontend-builder   → implementa en ecommerce-app/ (si aplica)
   │   └─ o ambos en paralelo si el orchestrator lo autoriza
   │
-  ├─ 5. security-reviewer     → aprobación o vulnerabilidades
+  ├─ 5. anti-hallucination-reviewer → aprobación o hallucinations (P-07, siempre primero)
   │
-  ├─ 6. code-reviewer         → aprobación o bloqueantes
+  ├─ 6. code-reviewer         → aprobación o bloqueantes (P-07, siempre segundo)
   │
-  ├─ 7. anti-hallucination-reviewer → aprobación o hallucinations
+  ├─ 7. security-reviewer     → aprobación o vulnerabilidades (P-07, solo si aplica)
   │
   ├─ 8. orchestrator          → valida DoD completo (.agents/protocols/dod-loop.md)
   │
@@ -69,11 +69,12 @@ orchestrator
 - Completan el spec (Resultados, Pendientes, Matriz de cierre).
 - Reportan al orchestrator con la salida obligatoria.
 
-### 6. Revisores — Seguridad, calidad, hallucinations
-Los tres revisores se ejecutan en orden. Cualquiera puede bloquear:
-- `security-reviewer` primero (si hay auth, modelos o datos sensibles).
-- `code-reviewer` segundo (calidad y patrones).
-- `anti-hallucination-reviewer` tercero (referencias inventadas).
+### 6. Revisores — Hallucinations, calidad, seguridad
+El orden es el de P-07 (`.agents/protocols/global-rules.md`). Cualquiera puede bloquear:
+- `anti-hallucination-reviewer` primero, siempre (referencias inventadas).
+- `code-reviewer` segundo, siempre (calidad y patrones).
+- `security-reviewer` tercero, solo si hay auth, modelos o datos sensibles.
+- `architecture-reviewer` ya corrió en el paso 3 si aplicaba cambio arquitectónico; no se repite aquí salvo que un revisor posterior detecte una desviación nueva.
 
 ### 7. Orchestrator — Validación de DoD
 - Verifica todos los reportes de revisores.

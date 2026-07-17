@@ -16,7 +16,7 @@ Revisa la implementación de otro agente antes de que el orchestrator apruebe la
 
 ## Cuándo se invoca
 
-Cuando el backend-builder o el frontend-builder reportan que su trabajo está listo, antes de que el orchestrator ejecute anti-hallucination-reviewer. Ambos revisores son obligatorios para integrar.
+Cuando el backend-builder o el frontend-builder reportan que su trabajo está listo, después de que el orchestrator ejecute anti-hallucination-reviewer (P-07: anti-hallucination-reviewer corre siempre primero, code-reviewer siempre segundo). Ambos revisores son obligatorios para integrar.
 
 ---
 
@@ -131,4 +131,4 @@ Rama revisada: [nombre-de-rama]
 
 - Reporte enviado al orchestrator.
 - Si BLOQUEADO: orchestrator devuelve trabajo al implementador.
-- Si APROBADO: orchestrator puede continuar con anti-hallucination-reviewer.
+- Si APROBADO: orchestrator puede continuar con security-reviewer (si aplica) o con la validación de DoD (P-15).
