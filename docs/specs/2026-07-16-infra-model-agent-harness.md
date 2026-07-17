@@ -4,7 +4,7 @@
 - **Tipo:** infra
 - **Complejidad:** L
 - **Fecha:** 2026-07-16
-- **Estado:** IN PROGRESS (CA-1 a CA-4 cumplidos; CA-5 en remediación tras veredicto CAMBIOS de `tech-reviewer` en PR #1)
+- **Estado:** DONE
 
 ## Historia
 
@@ -26,7 +26,7 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 - [x] CA-2: `docs/adrs/ADR-1-politica-de-modelos.md` existe, sigue `.agents/templates/adr-template.md`, y documenta las 3 opciones consideradas y la justificación de la elegida.
 - [x] CA-3: Los 17 agentes en `.claude/agents/` (11 roles materializados + `tech-reviewer` + `pr-publisher` nuevos + 4 agentes de test con `model:` corregido) tienen frontmatter válido de Claude Code, con `model:` explícito y sin ningún `opus` hardcodeado. Verificado: `grep -L "^model:" .claude/agents/*.md` y `grep -rn "model: opus" .claude/agents/*.md` ambos vacíos; `ls .claude/agents/*.md | wc -l` = 17.
 - [x] CA-4: `.agents/protocols/dod-loop.md` (P-15) define el mapa ítem de fallo → agente responsable de remediar, con tope de 3 iteraciones y escalamiento al usuario si se supera. Referenciado desde `global-rules.md`, `feature-flow.md` y `bugfix-flow.md`.
-- [ ] CA-5: El trabajo se entrega en rama `infra/model-agent-harness` (desde `develop`) con PR contra `develop`, usando `.agents/templates/pr-template.md`, y `tech-reviewer` audita el PR ya abierto como prueba viva del loop. **Actualizado 2026-07-17:** PR #1 abierto (https://github.com/anyRuvalcaba/integracion2026/pull/1). `tech-reviewer` corrió y reportó **CAMBIOS** (no APTO): (1) el quality gate de tests backend en el body del PR decía "179/180" pero la ejecución real de `tech-reviewer` dio 180/180 — corregido a reflejar flakiness observada en `IT-CART-014`; (2) `pr-publisher` había marcado este mismo CA-5 como cumplido antes de que la auditoría de `tech-reviewer` existiera — se deja sin marcar hasta que una segunda pasada de `tech-reviewer` confirme APTO; (3) este spec declaraba `Estado: DONE` con CA-5 abierto — corregido. En remediación, pendiente de segunda pasada de `tech-reviewer`.
+- [x] CA-5: El trabajo se entrega en rama `infra/model-agent-harness` (desde `develop`) con PR contra `develop`, usando `.agents/templates/pr-template.md`, y `tech-reviewer` audita el PR ya abierto como prueba viva del loop. PR #1 abierto (https://github.com/anyRuvalcaba/integracion2026/pull/1). `tech-reviewer` corrió 3 pasadas: 1ª CAMBIOS (quality gate de tests con dato incorrecto + CA-5 marcado prematuro por `pr-publisher` + spec declarado DONE con CA-5 abierto), 2ª CAMBIOS (backlog.md INFRA-001 seguía DONE), 3ª **APTO** — loop P-15 cerrado (3/3 iteraciones consumidas, cierre limpio sin necesidad de escalar al usuario).
 
 ## Consideraciones de Seguridad
 
@@ -66,17 +66,17 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 - **Riesgos que requieren seguimiento:** confirmar que el plugin Codex realmente carga tras el merge; confirmar que el push/PR real se completa una vez el usuario tenga remote+gh listos.
 - **Items que deben convertirse en backlog:** `INFRA-002` (activar FASE 10.5 cuando el backlog esté formalizado), `INFRA-003` (verificar carga del plugin Codex post-merge), `INFRA-004` (completar la integración del PR una vez `tech-reviewer` reporte APTO), `INFRA-005` (investigar la posible flakiness de `IT-CART-014` en `ecommerce-api`, no relacionado con este trabajo).
 
-## Resultados (se completa al cerrar — pendiente de segunda pasada de `tech-reviewer`)
-- **Fecha de cierre:** pendiente (no cerrado — ver Estado en Metadata).
-- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4.
-- **CAs no cumplidos:** CA-5 — PR #1 abierto, `tech-reviewer` reportó CAMBIOS en su primera pasada (quality gate de tests con dato incorrecto, CA-5 marcado prematuramente por `pr-publisher`, spec declarado DONE con CA-5 abierto). En remediación.
-- **Deuda técnica generada:** ninguna nueva sobre el harness tras 3 rondas de `anti-hallucination-reviewer` y 2 de `code-reviewer` (loop P-15) en la fase pre-PR. Se documentan 5 bugs reales preexistentes en la aplicación (`BUG-001` a `BUG-005`, descubiertos como efecto colateral de la auditoría) y la posible flakiness de `IT-CART-014` como ítems de backlog separados, fuera del alcance de este pendiente.
-- **Lecciones aprendidas:** (1) auditar `.gitignore` antes de diseñar cualquier política de agentes es obligatorio. (2) El loop P-15 funcionó como se diseñó en la fase pre-PR: `code-reviewer` y `anti-hallucination-reviewer` encontraron contradicciones reales en 3 rondas hasta APROBADO. (3) `tech-reviewer` (fase post-PR) también encontró hallazgos reales que la fase pre-PR no pudo detectar por diseño: un dato de quality gate incorrecto por flakiness de un test, y un checkbox marcado antes de que su propia evidencia existiera — confirma que la separación pre-PR/post-PR del loop tiene valor real, no es redundante.
+## Resultados
+- **Fecha de cierre:** 2026-07-17
+- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4, CA-5 (todos).
+- **CAs no cumplidos:** ninguno.
+- **Deuda técnica generada:** ninguna nueva sobre el harness. El loop de revisión completo (3 rondas `anti-hallucination-reviewer` + 2 rondas `code-reviewer` pre-PR, 3 pasadas `tech-reviewer` post-PR) terminó en APROBADO/APTO en todos los agentes obligatorios, sin escalar al usuario. Se documentan 5 bugs reales preexistentes en la aplicación (`BUG-001` a `BUG-005`, descubiertos como efecto colateral de la auditoría) y la posible flakiness de `IT-CART-014` como ítems de backlog separados, fuera del alcance de este pendiente.
+- **Lecciones aprendidas:** (1) auditar `.gitignore` antes de diseñar cualquier política de agentes es obligatorio — cambió el diagnóstico completo del problema. (2) El loop P-15 funcionó como se diseñó, tanto en la fase pre-PR (`code-reviewer`/`anti-hallucination-reviewer` encontraron y forzaron la corrección de contradicciones reales, incluyendo un fix de ronda 1 aplicado solo a una de dos copias espejo, detectado en ronda 2) como en la post-PR (`tech-reviewer` encontró, en 3 pasadas sucesivas, un quality gate con dato incorrecto por flakiness de un test, un checkbox marcado antes de que su propia evidencia existiera, y una fila de backlog que quedó sin actualizar en el primer intento de fix) — confirma que separar revisión pre-PR de post-PR tiene valor real, no es redundante: cada capa atrapó errores que la otra no vio.
 - **Pendientes abiertos confirmados:** ver sección anterior.
-- **Gaps no resueltos:** CA-5 abierto, en remediación activa dentro de este mismo ciclo.
+- **Gaps no resueltos:** ninguno bloqueante.
 - **Trabajo fuera de alcance confirmado:** estrategia integral de pruebas (16 fases), FASE 10.5 / baseline oficial, investigación de `IT-CART-014` y de los 5 bugs de aplicación descubiertos (`BUG-001` a `BUG-005`).
-- **Backlog derivado creado:** sí — `INFRA-002` a `INFRA-007` y `BUG-001` a `BUG-005` agregados a `docs/backlog.md`.
-- **Referencias a historias/tareas creadas:** `INFRA-001` (este spec), `INFRA-002` a `INFRA-007`, `BUG-001` a `BUG-005` (ver `docs/backlog.md`).
+- **Backlog derivado creado:** sí — `INFRA-002` a `INFRA-007` y `BUG-001` a `BUG-005` en `docs/backlog.md`.
+- **Referencias a historias/tareas creadas:** `INFRA-001` (este spec, DONE), `INFRA-002` a `INFRA-007`, `BUG-001` a `BUG-005` (ver `docs/backlog.md`).
 
 ## Matriz de cierre
 
@@ -90,7 +90,7 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 | `anti-hallucination-reviewer` (3 rondas) + `code-reviewer` (2 rondas) | Confirmado — APROBADO | Cerrar |
 | Push de `main`/`develop`/`infra/model-agent-harness` | Confirmado | Cerrar |
 | PR #1 abierto contra `develop` | Confirmado | Cerrar |
-| Auditoría de `tech-reviewer` sobre PR #1 | Parcial — 1ª pasada CAMBIOS | En remediación, 2ª pasada en curso |
+| Auditoría de `tech-reviewer` sobre PR #1 (3 pasadas: CAMBIOS, CAMBIOS, APTO) | Confirmado — APTO | Cerrar — listo para merge, pendiente de aprobación del usuario |
 | Verificación del plugin Codex | Parcial | Backlog `INFRA-003` |
 | FASE 10.5 / baseline oficial | Fuera de alcance | Backlog `INFRA-002` |
 | Test `IT-CART-014` con resultado inconsistente entre corridas | Inconsistente | Backlog `INFRA-005` |
