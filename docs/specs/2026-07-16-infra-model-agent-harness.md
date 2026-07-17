@@ -67,16 +67,15 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 - **Items que deben convertirse en backlog:** `INFRA-002` (activar FASE 10.5 cuando el backlog esté formalizado), `INFRA-003` (verificar carga del plugin Codex post-merge), `INFRA-004` (completar push + apertura de PR real una vez configurado remote/gh), `INFRA-005` (investigar el test `IT-CART-014` fallando en `ecommerce-api`, preexistente y no relacionado con este trabajo).
 
 ## Resultados (se completa al cerrar)
-- **Fecha de cierre:** 2026-07-16
-- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4
-- **CAs no cumplidos:** CA-5 parcial — rama y commits completos; push/PR real bloqueados por infraestructura externa (sin `git remote` ni `gh` CLI al momento del cierre de este spec).
-- **Deuda técnica generada:** ninguna nueva sobre el harness; se documenta el hallazgo preexistente `IT-CART-014` como ítem de backlog separado.
-- **Lecciones aprendidas:** auditar `.gitignore` antes de diseñar cualquier política de agentes es un paso obligatorio — el hallazgo de que `.agents/` y `.claude/` estaban completamente ignorados cambió por completo el diagnóstico y el alcance real del trabajo.
+- **Fecha de cierre:** 2026-07-17
+- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4. CA-5 casi completo: rama, commits y push ya realizados; solo falta la apertura formal del PR (en curso, siguiente paso de este mismo ciclo vía `pr-publisher` + `tech-reviewer`).
+- **Deuda técnica generada:** ninguna nueva sobre el harness tras 3 rondas de `anti-hallucination-reviewer` y 2 de `code-reviewer` (loop P-15). Se documentan 5 bugs reales preexistentes en la aplicación (`BUG-001` a `BUG-005`, descubiertos como efecto colateral de la auditoría) y el test `IT-CART-014` como ítems de backlog separados, fuera del alcance de este pendiente.
+- **Lecciones aprendidas:** (1) auditar `.gitignore` antes de diseñar cualquier política de agentes es obligatorio — el hallazgo de que `.agents/` y `.claude/` estaban completamente ignorados cambió el diagnóstico del problema real. (2) El loop P-15 funcionó como se diseñó: `code-reviewer` y `anti-hallucination-reviewer` encontraron contradicciones reales (orden de revisores invertido, runner de tests equivocado, rutas inexistentes, datos desactualizados en CLAUDE.md, tabla de bugs stale violando P-14) en 3 rondas hasta APROBADO — incluyendo un caso donde el fix de la ronda 1 quedó incompleto (corregido solo en una de dos copias espejo) y la ronda 2 lo detectó.
 - **Pendientes abiertos confirmados:** ver sección anterior.
-- **Gaps no resueltos:** apertura de PR real contra `develop` (bloqueada por infraestructura externa al alcance de este spec).
-- **Trabajo fuera de alcance confirmado:** estrategia integral de pruebas (16 fases), FASE 10.5 / baseline oficial, investigación de `IT-CART-014`.
-- **Backlog derivado creado:** sí — `INFRA-002`, `INFRA-003`, `INFRA-004`, `INFRA-005` agregados a `docs/backlog.md` en este mismo commit de cierre.
-- **Referencias a historias/tareas creadas:** `INFRA-001` (este spec, DONE), `INFRA-002`, `INFRA-003`, `INFRA-004`, `INFRA-005` (ver `docs/backlog.md`).
+- **Gaps no resueltos:** ninguno bloqueante — la apertura del PR es el siguiente paso inmediato de este mismo ciclo, no un gap diferido.
+- **Trabajo fuera de alcance confirmado:** estrategia integral de pruebas (16 fases), FASE 10.5 / baseline oficial, investigación de `IT-CART-014` y de los 5 bugs de aplicación descubiertos (`BUG-001` a `BUG-005`).
+- **Backlog derivado creado:** sí — `INFRA-002` a `INFRA-007` y `BUG-001` a `BUG-005` agregados a `docs/backlog.md`.
+- **Referencias a historias/tareas creadas:** `INFRA-001` (este spec, DONE), `INFRA-002` a `INFRA-007`, `BUG-001` a `BUG-005` (ver `docs/backlog.md`).
 
 ## Matriz de cierre
 
@@ -87,8 +86,13 @@ El repo ya tenía un protocolo SSDLC completo (`/SSDLC.md` v2.0.0) y un sistema 
 | `dod-loop.md` (P-15) + referencias en workflows y global-rules | Confirmado | Cerrar |
 | `.gitignore` corregido, `.agents/`+`.claude/` versionados | Confirmado | Cerrar |
 | CLAUDE.md, settings.json, PR template, pr-checklist actualizados | Confirmado | Cerrar |
-| Push + PR real contra `develop` | Parcial | Backlog `INFRA-004` |
+| `anti-hallucination-reviewer` (3 rondas) + `code-reviewer` (2 rondas) | Confirmado — APROBADO | Cerrar |
+| Push de `main`/`develop`/`infra/model-agent-harness` | Confirmado | Cerrar |
+| Apertura de PR real contra `develop` + auditoría de `tech-reviewer` | En curso | Continúa en este mismo ciclo |
 | Verificación del plugin Codex | Parcial | Backlog `INFRA-003` |
 | FASE 10.5 / baseline oficial | Fuera de alcance | Backlog `INFRA-002` |
 | Test `IT-CART-014` fallando (preexistente) | Inconsistente | Backlog `INFRA-005` |
+| `.env.example` PORT desalineado | Inconsistente | Backlog `INFRA-006` |
+| Limpieza cosmética residual de referencias | Parcial | Backlog `INFRA-007` |
+| 5 bugs de aplicación descubiertos durante la auditoría (`AuthProvider`, `CartContext`, `errorHandler`, `cartController`) | Inconsistente | Backlog `BUG-001` a `BUG-005` |
 | Estrategia integral de pruebas (16 fases) | Fuera de alcance | Sesión nueva, ya acordado con el usuario |
