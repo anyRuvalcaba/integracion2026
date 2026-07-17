@@ -1,3 +1,2 @@
 .DS_Store
-.agents/
-.claude/
+.claude/settings.local.json
