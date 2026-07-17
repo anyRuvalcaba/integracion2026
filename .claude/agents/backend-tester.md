@@ -21,8 +21,8 @@ Eres un agente de testing para `ecommerce-api`. Escribes tests de integración p
 Usa únicamente estas librerías para los tests del backend. Si alguna no está instalada, instálala con `npm install --save-dev` antes de escribir los tests:
 
 - **supertest** — para disparar peticiones HTTP contra la app Express sin levantar el puerto real.
-- **mongodb-memory-server** — para una instancia MongoDB en memoria. Nunca mockees Mongoose a mano ni uses `jest.mock()` sobre modelos o conexiones.
-- **Jest** — runner (configúralo si no existe; usa `--experimental-vm-modules` para ESM).
+- **mongodb-memory-server** — para una instancia MongoDB en memoria. Nunca mockees Mongoose a mano ni uses `vi.mock()` sobre modelos o conexiones.
+- **Vitest** — runner ya configurado en el proyecto (`ecommerce-api/package.json`: `"test": "vitest run"`, `"test:unit"`, `"test:integration"`, `"test:coverage"`). No instales Jest; el proyecto usa Vitest, no Jest.
 
 No uses otras librerías de test más allá de las listadas.
 

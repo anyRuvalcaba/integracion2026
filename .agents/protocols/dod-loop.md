@@ -18,8 +18,8 @@ Al final de cada ciclo de implementación, el orchestrator evalúa el DoD (`back
 | Fallo detectado | Agente responsable de remediar |
 |---|---|
 | Tests backend en rojo (`npm test` en `ecommerce-api`) | `backend-builder` |
-| Tests frontend en rojo (`npm test -- --watchAll=false` / `npm run test:run`) | `frontend-builder` |
-| Cypress E2E en rojo (login/register/checkout) | `frontend-builder` si el fallo es de UI/estado; `backend-builder` si el fallo es de contrato de API — el orchestrator decide leyendo el mensaje de fallo antes de despachar |
+| Tests frontend en rojo (`npm test -- --watchAll=false`, o `npm run test:run` si ese script ya existe en la rama) | `frontend-builder` |
+| Cypress E2E en rojo (login/register/checkout) — solo si Cypress ya está configurado en la rama | `frontend-builder` si el fallo es de UI/estado; `backend-builder` si el fallo es de contrato de API — el orchestrator decide leyendo el mensaje de fallo antes de despachar |
 | `anti-hallucination-reviewer` → BLOQUEADO | El implementador que generó el hallazgo (`backend-builder` o `frontend-builder`) |
 | `code-reviewer` → BLOQUEADO | El implementador que generó el hallazgo |
 | `security-reviewer` → BLOQUEADO | El implementador; si el hallazgo implica cambio de contrato/schema, primero `architecture-reviewer` (ADR) y luego el implementador |

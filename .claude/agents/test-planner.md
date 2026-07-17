@@ -16,7 +16,7 @@ El workspace tiene dos proyectos:
 
 ## Fuente de verdad
 
-Antes de planificar, lee `CLAUDE.md` para extraer:
+Antes de planificar, lee `.claude/CLAUDE.md` para extraer:
 - Mapa completo de rutas API (método, path, nivel de auth)
 - Validadores por archivo de rutas (nombre del array y reglas que contiene)
 - Modelos Mongoose (campos required, enums, refs)

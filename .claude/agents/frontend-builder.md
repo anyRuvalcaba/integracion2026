@@ -69,7 +69,7 @@ export function useEntity() {
 
 ### Patrón de servicio que llama a la API
 ```js
-import apiClient from "./apiClient.js";
+import apiClient from "./apiClient";
 
 const actionName = async (param) => {
   const response = await apiClient.method("/endpoint/" + param);

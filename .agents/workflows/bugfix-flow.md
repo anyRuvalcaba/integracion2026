@@ -79,23 +79,9 @@ El spec de un bugfix es más breve que el de un feature pero igualmente obligato
 
 ---
 
-## Bugs críticos priorizados en el backlog actual
+## Bugs críticos priorizados
 
-Los siguientes bugs del backlog tienen flujo de bugfix simplificado porque están completamente diagnosticados:
-
-| ID | Bug | Impacto |
-|----|-----|---------|
-| T-001 | AuthProvider ausente en App.jsx | Crítico — crash en runtime |
-| T-002 | Puerto incorrecto en apiClient.js | Crítico — ninguna API call funciona |
-| T-003 | CartContext: items.product_id → item.product._id | Crítico — carrito no calcula |
-| T-004 | CartContext: cartId vs cartid | Crítico — carrito no actualiza |
-| T-005 | errorHandler antes de rutas en server.js | Alto — errores no capturados |
-| T-006 | res.headerSent → res.headersSent en errorHandler.js | Alto — guard no funciona |
-| T-007 | debugger en Checkout.jsx:368 | Alto — bloquea DevTools |
-| T-009 | cartController: populate("products.productId") | Alto — addProductToCart falla |
-| T-012 | userController: password no desestructurado | Alto — updateUser crashea |
-
-Para estos ítems, el spec puede ser muy breve (se conoce la causa raíz y el fix).
+Por P-14 (`.agents/protocols/global-rules.md`), el backlog es la única fuente de trabajo — la lista de bugs críticos diagnosticados vive en `docs/backlog.md`, no en este archivo. Para ítems con causa raíz y fix ya conocidos, el spec puede ser muy breve.
 
 ---
 

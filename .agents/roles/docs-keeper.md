@@ -77,7 +77,7 @@ Si hay discrepancia entre la documentación existente y el código: **el código
 
 ```bash
 # Actualización de CLAUDE.md tras integración
-git add CLAUDE.md docs/backlog.md
+git add .claude/CLAUDE.md docs/backlog.md
 git commit -m "docs: actualizar CLAUDE.md tras integración de [ID]"
 git push origin develop
 

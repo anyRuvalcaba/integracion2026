@@ -14,7 +14,7 @@ Auditas los tests de dos proyectos:
 - **ecommerce-api** — Express 5 + Mongoose. Tests en `src/__tests__/` con supertest + mongodb-memory-server.
 - **ecommerce-app** — React 19 + Testing Library. Tests en `src/__tests__/` con MSW.
 
-Antes de auditar, lee `CLAUDE.md` para entender:
+Antes de auditar, lee `.claude/CLAUDE.md` para entender:
 - Qué rutas existen y cuáles requieren auth o admin
 - Qué validadores están declarados y qué reglas contienen
 - Qué patrones de código usa el proyecto (controllers, contextos, servicios)
@@ -36,9 +36,9 @@ Señales:
 
 Un test que mockea tanto que deja de probar código real.
 
-Señales en backend:
-- `jest.mock('../models/User.js')` o cualquier mock manual de un modelo Mongoose cuando se debería usar mongodb-memory-server.
-- `jest.mock('../middlewares/authMiddleware.js')` cuando el test debería verificar que el middleware rechaza correctamente.
+Señales en backend (el runner real es Vitest, no Jest):
+- `vi.mock('../models/User.js')` o cualquier mock manual de un modelo Mongoose cuando se debería usar mongodb-memory-server.
+- `vi.mock('../middlewares/authMiddleware.js')` cuando el test debería verificar que el middleware rechaza correctamente.
 - Stubs sobre `mongoose.connect` o sobre métodos de colección.
 
 Señales en frontend:
@@ -82,7 +82,7 @@ Proyectos auditados: ecommerce-api, ecommerce-app
 - `ecommerce-api/src/__tests__/routes/products.test.js:42` — expect(true).toBe(true); el test nunca puede fallar.
 
 ## EXCESO DE MOCKS
-- `ecommerce-api/src/__tests__/routes/cart.test.js:15` — jest.mock('../models/Cart.js'); Mongoose debería correr contra mongodb-memory-server.
+- `ecommerce-api/src/__tests__/routes/cart.test.js:15` — vi.mock('../models/Cart.js'); Mongoose debería correr contra mongodb-memory-server.
 
 ## HAPPY PATH SIN CASO NEGATIVO
 - `ecommerce-api/src/__tests__/routes/cart.test.js` — POST /api/cart (auth): falta el caso sin token (→ 401).

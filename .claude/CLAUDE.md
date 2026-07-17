@@ -58,7 +58,7 @@ Cuando se creen nuevas rutas o se modifiquen respuestas existentes, usar estos s
 | No autenticado | 401 |
 | Sin permisos (no admin) | 403 |
 | Recurso no encontrado | 404 |
-| Email/campo duplicado | 409 — actualmente se retorna 400 en `authController.js` |
+| Email/campo duplicado | 409 — ya implementado en `authController.js` |
 
 Formato de error estándar del skill (referencia para nuevo código):
 ```json
@@ -700,7 +700,7 @@ Lee el token de `Authorization: Bearer <token>`. Decodifica con `jwt.verify` usa
 ## Variables de entorno — `ecommerce-api`
 
 ```
-PORT=3000
+PORT=4000
 MONGODB_URI=mongodb://localhost:27017/ecommerce-db-test
 JWT_SECRET=secret_token
 JWT_REFRESH_TOKEN=secret_refresh_token

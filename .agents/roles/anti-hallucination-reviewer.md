@@ -43,9 +43,10 @@ Para cada `import X from "librería"`:
 
 ### 2. Imports de librerías (frontend)
 Para cada `import X from "librería"`:
-- Verificar que `librería` está en `ecommerce-app/package.json`.
-- Librerías instaladas: react, react-dom, react-router-dom, axios, @testing-library/react, @testing-library/user-event, @testing-library/jest-dom, react-scripts, web-vitals.
-- Si aparece una librería no listada → **HALLUCINATION**.
+- Verificar que `librería` está en `ecommerce-app/package.json` **de la rama actual**, no contra una lista fija.
+- Librerías base ya instaladas: react, react-dom, react-router-dom, axios, @testing-library/react, @testing-library/user-event, @testing-library/jest-dom, react-scripts, web-vitals.
+- `msw` es una dependencia de testing prevista por `frontend-tester.md`; si no está en el `package.json` de la rama, repórtalo como INCONSISTENCIA, no como HALLUCINATION.
+- Cualquier otra librería no listada aquí ni en `package.json` → **HALLUCINATION**.
 
 ### 3. Rutas de API referenciadas desde el frontend
 Para cada llamada a `apiClient.get/post/put/delete("/ruta")`:

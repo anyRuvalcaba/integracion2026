@@ -31,7 +31,7 @@ Cuando el orchestrator confirma que el DoD está completo (`.agents/checklists/p
 | Spec cerrado en estado `DONE` | `docs/specs/` |
 | ID de backlog | `docs/backlog.md` |
 | Reportes de revisores | Reportes ya producidos por cada uno |
-| Resultado de quality gates | Salida de `npm test` / `npm run test:run` ya ejecutada |
+| Resultado de quality gates | Salida de `npm test` (backend) / `npm test -- --watchAll=false` (frontend) ya ejecutada |
 | Nombre de la rama | Contexto provisto por el orchestrator |
 
 ## Procedimiento

@@ -31,7 +31,7 @@ Siempre, antes de que el orchestrator apruebe el entregable de cualquier subagen
 Para cada `import X from "librería"`: verifica que `librería` está en `ecommerce-api/package.json`. Librerías instaladas: express, mongoose, bcrypt, cors, dotenv, express-validator, jsonwebtoken, nodemon. Si aparece una no listada → **HALLUCINATION**.
 
 ### 2. Imports de librerías (frontend)
-Para cada `import X from "librería"`: verifica contra `ecommerce-app/package.json`. Librerías instaladas: react, react-dom, react-router-dom, axios, @testing-library/react, @testing-library/user-event, @testing-library/jest-dom, react-scripts, web-vitals. Si aparece una no listada → **HALLUCINATION**.
+Para cada `import X from "librería"`: verifica contra `ecommerce-app/package.json` **tal como está en la rama actual**, no contra una lista fija. Librerías base ya instaladas: react, react-dom, react-router-dom, axios, @testing-library/react, @testing-library/user-event, @testing-library/jest-dom, react-scripts, web-vitals. `frontend-tester.md` puede requerir `msw` para interceptar peticiones — si el `package.json` de la rama no la tiene todavía, no es HALLUCINATION per se: repórtalo como INCONSISTENCIA ("msw referenciada pero no instalada en esta rama") en vez de HALLUCINATION, porque es una dependencia de testing explícitamente prevista por el rol, no inventada. Cualquier otra librería no listada aquí ni en `package.json` → **HALLUCINATION**.
 
 ### 3. Rutas de API referenciadas desde el frontend
 Para cada llamada a `apiClient.get/post/put/delete("/ruta")`: verifica que la ruta existe en `.claude/CLAUDE.md` §mapa-de-rutas y está montada en `ecommerce-api/src/routes/index.js`. Si la ruta no existe ni es parte del pendiente actual → **HALLUCINATION**.

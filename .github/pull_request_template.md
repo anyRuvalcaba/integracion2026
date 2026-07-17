@@ -29,7 +29,7 @@
 
 ## Quality Gates
 
-- [x] Type check / lint — sin errores
+- Type check / lint — no aplica (sin TypeScript ni lint configurado en este proyecto)
 - [x] Tests — todos pasan
 - [x] Diff revisado — sin secrets, sin `debugger`, sin `console.log`
 - [x] Prueba funcional — todos los CAs verificados
