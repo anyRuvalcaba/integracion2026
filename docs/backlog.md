@@ -16,3 +16,23 @@
 | BUG-004 | bugfix | `ecommerce-api/server.js` registra `errorHandler` (línea 23) ANTES de `app.use("/api", routes)` (línea 31) — los errores de las rutas no pasan por el error handler centralizado | Alta | Pendiente |
 | BUG-005 | bugfix | `cartController.js:160` usa `cart.populate("products.productId")`; el campo real en `Cart.products[]` es `product`, no `productId` — `addProductToCart` probablemente falla o no popula correctamente | Alta | Pendiente |
 | INFRA-007 | docs | Limpieza de referencias residuales en `.agents/`: `anti-hallucination-reviewer.md` menciona IDs obsoletos `T-015/T-016` (no existen en este backlog), y quedan menciones informales a `CLAUDE.md` sin el prefijo `.claude/` en varios roles (no son comandos ejecutables, solo prosa descriptiva) | Baja | Pendiente |
+| TEST-001 | test | Backend: `GET /payment-methods/me` sin test de integración — endpoint activo en producción, único con 0% de cobertura (ver `docs/testing/known-issues.md`) | Alta | Pendiente |
+| TEST-002 | test | Backend: sin validación de `totalPrice`/stock en `createOrder` — riesgo de negocio real (dinero, sin cobertura); requiere implementar la regla antes de poder testearla | Alta | Pendiente |
+| TEST-003 | test | Frontend: `CartView`/página `Cart` sin test unitario — core flow, solo cubierto indirectamente vía `CartContext.test.jsx` | Alta | Pendiente |
+| TEST-004 | test | Frontend: `Checkout/Address` (`AddressForm`, `AddressList`, `AddressItem`) sin test unitario dedicado | Alta | Pendiente |
+| TEST-005 | test | Frontend: `Checkout/Payment` (`PaymentForm`, `PaymentList`, `PaymentItem`) sin test unitario dedicado | Alta | Pendiente |
+| TEST-006 | infra | Backend/Arquitectura: decidir destino de `cartController.addProductToCart` (montarla corrigiendo el bug de `BUG-005`, o eliminar código muerto) — requiere `architecture-reviewer` antes de implementar | Media | Pendiente |
+| TEST-007 | test | Frontend: `SummarySection` sin test aislado (solo cubierto indirectamente vía `Checkout.test.jsx`) | Media | Pendiente |
+| TEST-008 | test | Frontend: `Orders`, `PurchaseOrder`, `OrderConfirmation` sin test unitario | Media | Pendiente |
+| TEST-009 | test | Frontend: `WishList` sin test unitario | Media | Pendiente |
+| TEST-010 | test | Frontend: `Profile`/`ProfileCard` sin test unitario | Media | Pendiente |
+| TEST-011 | test | Frontend: `AuthContext` sin test directo — solo cubierto indirectamente vía `LoginForm`/`ProtectedRoute` | Media | Pendiente |
+| TEST-012 | test | Frontend: `CategoryProducts`/`SearchResultsList`/páginas wrapper (`Product.jsx`, `CategoryPage.jsx`, `SearchResults.jsx`) sin test | Media | Pendiente |
+| TEST-013 | test | E2E: sin spec dedicado a alta/edición de dirección y método de pago | Media | Pendiente |
+| TEST-014 | test | Frontend: correr `npm run test:coverage` para establecer la cobertura real y proponer thresholds iniciales — hoy no hay ninguno configurado (a diferencia del backend, que tiene 70/70/60/70) | Media | Pendiente |
+| TEST-015 | test | Frontend: `layout/` (Header, Footer, Navigation, Breadcrumb, Newsletter) sin test | Baja | Pendiente |
+| TEST-016 | test | Frontend: `common/` (Button, Input, Badge, ErrorMessage, Icon, Loading) sin test directo | Baja | Pendiente |
+| TEST-017 | test | Frontend: `ThemeContext` sin test | Baja | Pendiente |
+| TEST-018 | test | E2E: sin spec de búsqueda/categorías, Orders, WishList, Profile | Baja | Pendiente |
+| TEST-019 | infra | Root: evaluar si conviene un `package.json` raíz con scripts unificados (`test:all`, etc.) — requiere `architecture-reviewer`, decisión estructural | Baja | Pendiente |
+| TEST-020 | test | Backend: `src/config/db.conf.js` sin test (0% cobertura) — ya aceptado como bajo impacto en `docs/test-plans/backend-test-plan.md` | Baja | Pendiente |
