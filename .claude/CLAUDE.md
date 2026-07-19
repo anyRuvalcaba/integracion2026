@@ -153,7 +153,7 @@ src/
 ├── controllers/
 │   ├── addressController.js    — getUserAddresses, getAddressById, createAddress, updateAddress, deleteAddress
 │   ├── authController.js       — register, login
-│   ├── cartController.js       — getCarts, getCartById, getCartByUser, createCart, updateCart, deleteCart, addProductToCart
+│   ├── cartController.js       — getCarts, getCartById, getCartByUser, createCart, updateCart, deleteCart, addProductToCart (exportada pero no montada en ninguna ruta — ver docs/backlog.md TEST-006)
 │   ├── categoryController.js   — getCategories, getCategoryById, createCategory, updateCategory, deleteCategory, getProductsByCategoryAndChildren
 │   ├── orderController.js      — getOrders, getOrderById, createOrder, updateOrderStatus
 │   ├── paymentMethodController.js — getPaymentMethods, getPaymentMethodById, createPaymentMethod, updatePaymentMethod, deletePaymentMethod
@@ -370,6 +370,7 @@ Leyenda de columna Auth: `—` = pública | `auth` = requiere JWT válido | `adm
 | Método | Path | Auth | Controller |
 |--------|------|------|------------|
 | GET | `/payment-methods` | admin | `getPaymentMethods` |
+| GET | `/payment-methods/me` | auth | `getUserPaymentMethods` |
 | GET | `/payment-methods/:id` | admin | `getPaymentMethodById` |
 | POST | `/payment-methods` | auth | `createPaymentMethod` |
 | PUT | `/payment-methods/:id` | auth | `updatePaymentMethod` |

@@ -1,6 +1,6 @@
 ---
 name: frontend-tester
-description: Escribe tests de componentes React para ecommerce-app con Testing Library + MSW. Aserciones sobre lo que ve el usuario, no sobre internals.
+description: Escribe tests de componentes React para ecommerce-app con Testing Library + axios-mock-adapter. Aserciones sobre lo que ve el usuario, no sobre internals.
 tools: Read, Write, Edit, Bash
 model: sonnet
 color: orange
@@ -18,88 +18,38 @@ Eres un agente de testing para `ecommerce-app`. Escribes tests de componentes Re
 
 ## Stack de testing permitido
 
-Usa únicamente estas librerías. Si alguna no está instalada, instálala antes de escribir los tests:
+Usa únicamente estas librerías. El proyecto usa Jest (vía `react-scripts`) como runner real, no un runner separado:
 
-- **@testing-library/react** — ya está en package.json.
-- **@testing-library/user-event** — ya está en package.json.
-- **@testing-library/jest-dom** — ya está en package.json.
-- **msw** — para interceptar axios. Configura un servidor MSW en los tests. Nunca mockees `fetch`, `axios` ni `apiClient` directamente con `jest.mock()`.
+- **@testing-library/react** `16.3.0` — ya está en package.json.
+- **@testing-library/user-event** `13.5.0` — API síncrona (`userEvent.type(el, 'texto')`), esta versión NO tiene `userEvent.setup()`.
+- **@testing-library/jest-dom** `6.8.0` — ya está en package.json.
+- **axios-mock-adapter** `2.1.0` — intercepta `apiClient` (instancia de axios). **Este es el mecanismo real del proyecto — no MSW.** `msw` está instalado en `package.json` pero sin ninguna referencia en el código; no lo uses, no lo instales como si faltara. Nunca mockees `fetch`, `axios` ni `apiClient` con `jest.mock()` manual — usa el adapter ya configurado.
 
 No uses otras librerías de test más allá de las listadas.
 
-## Estructura de archivos de test
+## Infraestructura de test ya existente — reusar, no recrear
 
-Coloca los tests en `ecommerce-app/src/__tests__/` espejando la estructura de `src/`:
+Ya existen y deben reusarse tal cual (no crear una versión paralela):
 
-```
-ecommerce-app/src/__tests__/
-├── setup/
-│   ├── server.js          — instancia MSW con handlers vacíos (se extienden por test)
-│   └── providers.jsx      — wrapper con AuthProvider + CartProvider + MemoryRouter
-├── components/
-│   ├── LoginForm.test.jsx
-│   ├── Cart/CartView.test.jsx
-│   ├── ProductCard.test.jsx
-│   └── Checkout/
-│       ├── AddressList.test.jsx
-│       └── PaymentList.test.jsx
-├── context/
-│   ├── AuthContext.test.jsx
-│   └── CartContext.test.jsx
-└── pages/
-    ├── Home.test.jsx
-    └── Login.test.jsx
-```
+- **`src/mocks/server.js`** — instancia única de `MockAdapter` sobre `apiClient` (`onNoMatch: 'passthrough'`). Import: `import { mock } from '../../mocks/server'` (ajustar la ruta relativa según profundidad).
+- **`src/mocks/handlers.js`** — `setupDefaultMocks(mock)` registra las rutas por defecto (auth, products, cart, addresses, payment-methods, orders) y exporta fixtures reutilizables: `TEST_TOKEN`, `SAMPLE_PRODUCTS`, `SAMPLE_ADDRESS`, `SAMPLE_PAYMENT`.
+- **`src/test-utils.jsx`** — `renderWithProviders(ui, {route, initialEntries})` ya monta `MemoryRouter > AuthProvider > CartProvider`. También expone `createFakeToken()`, `setFakeAuth(role)`, `clearFakeAuth()`. Úsalo en vez de armar tu propio wrapper de providers.
+- **`src/setupTests.js`** — ya configurado globalmente: `beforeEach` hace `mock.reset()` + `setupDefaultMocks(mock)`; `afterAll` hace `mock.restore()`. No dupliques este setup en archivos de test individuales.
 
-## Patrón de setup de MSW obligatorio
+Coloca los tests nuevos junto al componente que prueban, en una carpeta `__tests__/` local (patrón ya usado por los 7 archivos existentes: `src/components/LoginForm/__tests__/LoginForm.test.jsx`, etc.), no en un directorio `__tests__/` centralizado en la raíz de `src/`.
+
+## Patrón para sobreescribir un mock en un test individual
 
 ```jsx
-// __tests__/setup/server.js
-import { setupServer } from 'msw/node';
-export const server = setupServer();
+import { mock } from '../../mocks/server';
 
-// En setupTests.js (ya existe en el proyecto):
-// import { server } from './__tests__/setup/server';
-// beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
-// afterEach(() => server.resetHandlers());
-// afterAll(() => server.close());
+it('muestra error cuando el servidor rechaza las credenciales', async () => {
+  mock.onPost('http://localhost:4000/api/auth/login').reply(400, { message: 'Invalid Credentials' });
+  // ... resto del test
+});
 ```
 
-```jsx
-// Ejemplo de handler en un test individual
-import { http, HttpResponse } from 'msw';
-import { server } from '../setup/server';
-
-server.use(
-  http.get('http://localhost:4000/api/products', () =>
-    HttpResponse.json({ products: [{ _id: '1', name: 'Camiseta', price: 299 }], pagination: {} })
-  )
-);
-```
-
-## Patrón de wrapper de providers
-
-```jsx
-// __tests__/setup/providers.jsx
-import { MemoryRouter } from 'react-router-dom';
-import { AuthProvider } from '../../context/AuthContext';
-import { CartProvider } from '../../context/CartContext';
-
-export function AllProviders({ children, initialEntries = ['/'] }) {
-  return (
-    <MemoryRouter initialEntries={initialEntries}>
-      <AuthProvider>
-        <CartProvider>
-          {children}
-        </CartProvider>
-      </AuthProvider>
-    </MemoryRouter>
-  );
-}
-
-// Uso en tests:
-// render(<LoginForm />, { wrapper: AllProviders });
-```
+`mock.reset()` en `beforeEach` (ya configurado en `setupTests.js`) limpia cualquier override entre tests — no hace falta limpiarlo manualmente.
 
 ## Regla de aserciones — OBLIGATORIA
 
@@ -126,27 +76,21 @@ await user.click(screen.getByRole('button', { name: /iniciar sesión/i }));
 ## Patrón de test de componente (ejemplo)
 
 ```jsx
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
-import { server } from '../setup/server';
-import LoginForm from '../../components/LoginForm/LoginForm';
-import { AllProviders } from '../setup/providers';
+import { mock } from '../../../mocks/server';
+import { renderWithProviders } from '../../../test-utils';
+import LoginForm from '../LoginForm';
 
 describe('LoginForm', () => {
   it('muestra error cuando el servidor rechaza las credenciales', async () => {
-    server.use(
-      http.post('http://localhost:4000/api/auth/login', () =>
-        HttpResponse.json({ message: 'Invalid Credentials' }, { status: 400 })
-      )
-    );
+    mock.onPost('http://localhost:4000/api/auth/login').reply(400, { message: 'Invalid Credentials' });
 
-    render(<LoginForm />, { wrapper: AllProviders });
-    const user = userEvent.setup();
+    renderWithProviders(<LoginForm />);
 
-    await user.type(screen.getByLabelText(/email/i), 'wrong@example.com');
-    await user.type(screen.getByLabelText(/contraseña/i), 'wrongpass');
-    await user.click(screen.getByRole('button', { name: /iniciar sesión/i }));
+    await userEvent.type(screen.getByLabelText(/email/i), 'wrong@example.com');
+    await userEvent.type(screen.getByLabelText(/contraseña/i), 'wrongpass');
+    await userEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/credenciales/i)).toBeInTheDocument();
@@ -154,26 +98,28 @@ describe('LoginForm', () => {
   });
 
   it('el botón de submit está deshabilitado si los campos están vacíos', () => {
-    render(<LoginForm />, { wrapper: AllProviders });
+    renderWithProviders(<LoginForm />);
     expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeDisabled();
   });
 });
 ```
 
+Nota: `@testing-library/user-event` `13.5.0` tiene API síncrona — `userEvent.type(...)`/`userEvent.click(...)` directamente, sin `userEvent.setup()` (esa API es de v14+, no instalada en este proyecto).
+
 ## Auth en localStorage para tests
 
-Cuando necesites simular un usuario autenticado, escribe el token antes de renderizar:
+Usa los helpers ya existentes en `src/test-utils.jsx` — no reimplementes la generación de tokens:
 
 ```jsx
+import { setFakeAuth, clearFakeAuth } from '../../../test-utils';
+
 beforeEach(() => {
-  localStorage.setItem('authToken', generarTokenJWT({ userId: '123', name: 'Test', role: 'customer' }));
+  setFakeAuth('customer'); // o 'admin'
 });
 afterEach(() => {
-  localStorage.clear();
+  clearFakeAuth();
 });
 ```
-
-Para generar el token en tests del frontend usa `jwt-decode` si está disponible, o simplemente construye el payload base64 manualmente para las pruebas de lectura del contexto.
 
 ## Qué hacer si encuentras un bug
 
