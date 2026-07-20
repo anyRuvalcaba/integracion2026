@@ -16,6 +16,10 @@ Documentados originalmente en `ecommerce-app/docs/testing.md`, verificados de nu
 | — | `ecommerce-api/src/controllers/cartController.js:160` | `addProductToCart` usa `.populate("products.productId")`; el campo real del schema `Cart.products[]` es `product`. Función no montada en ninguna ruta, así que este bug nunca se ejecuta hoy — pero si se monta sin corregirlo, el populate no hará nada útil. | Alta (condicional a que se monte la ruta) | `BUG-005`, `TEST-006` |
 | — | `ecommerce-app/src/components/ProductCard/ProductCard.jsx`, `ProductDetails.jsx`, `Cart/CartView.jsx` | Desestructuran `product.imagesUrl` (array); el campo real del modelo `Product` es `imageURL` (string singular). Ningún producto real muestra su imagen — siempre cae al placeholder. Detectado por `anti-hallucination-reviewer` durante la revisión de este mismo pendiente (`TEST-000`), preexistente. | Alta | `BUG-006` |
 
+## Fix aplicado (no pendiente) al commitear la infraestructura de testing
+
+`ecommerce-app/src/pages/OrderConfirmation.jsx`: `order.id || "N/A"` → `order.id || order._id || "N/A"`. Antes del fix, cualquier orden real proveniente de la API (que usa `_id` de Mongoose, no `id`) mostraba siempre "N/A" en la confirmación de compra — un defecto real que quedaba oculto por el fallback silencioso. Corregido junto con el resto de la infraestructura de testing frontend commiteada en `TEST-000` (commit `3264de4`), detectado por `tech-reviewer` durante la auditoría del PR como un cambio funcional real, no solo instrumentación de `data-testid`. No requiere ítem de backlog propio — ya está corregido y cubierto por `Checkout.test.jsx`.
+
 Nota explícita heredada del documento original: no se modificó código de producción para forzar el paso de los tests — los tests existentes verifican el comportamiento real actual, defectos incluidos.
 
 ## Gaps de backend (nuevos, encontrados en esta auditoría)
