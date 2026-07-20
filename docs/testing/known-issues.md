@@ -14,6 +14,7 @@ Documentados originalmente en `ecommerce-app/docs/testing.md`, verificados de nu
 | DEF-04 | `src/pages/Checkout.jsx:288` | `<Loading message="..." />` pero `Loading.jsx` recibe `{children}`, no `{message}` — el texto nunca se renderiza. | Baja | — (agregar a backlog si se prioriza) |
 | — | `ecommerce-api/src/server.js:23,31` | `errorHandler` registrado antes de `app.use("/api", routes)` — los errores lanzados en rutas no pasan por el manejador centralizado. | Alta | `BUG-004` |
 | — | `ecommerce-api/src/controllers/cartController.js:160` | `addProductToCart` usa `.populate("products.productId")`; el campo real del schema `Cart.products[]` es `product`. Función no montada en ninguna ruta, así que este bug nunca se ejecuta hoy — pero si se monta sin corregirlo, el populate no hará nada útil. | Alta (condicional a que se monte la ruta) | `BUG-005`, `TEST-006` |
+| — | `ecommerce-app/src/components/ProductCard/ProductCard.jsx`, `ProductDetails.jsx`, `Cart/CartView.jsx` | Desestructuran `product.imagesUrl` (array); el campo real del modelo `Product` es `imageURL` (string singular). Ningún producto real muestra su imagen — siempre cae al placeholder. Detectado por `anti-hallucination-reviewer` durante la revisión de este mismo pendiente (`TEST-000`), preexistente. | Alta | `BUG-006` |
 
 Nota explícita heredada del documento original: no se modificó código de producción para forzar el paso de los tests — los tests existentes verifican el comportamiento real actual, defectos incluidos.
 
