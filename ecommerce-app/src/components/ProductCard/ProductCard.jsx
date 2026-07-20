@@ -69,6 +69,7 @@ export default function ProductCard({ product, orientation = "vertical" }) {
           )}
         </div>
         <Button
+          data-testid="add-to-cart-button"
           variant="primary"
           size="sm"
           disabled={stock === 0}

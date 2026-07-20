@@ -6,3 +6,6 @@ build/
 .env.test.local
 .env.production.local
 npm-debug.log*
+cypress.env.json
+cypress/videos/
+cypress/screenshots/

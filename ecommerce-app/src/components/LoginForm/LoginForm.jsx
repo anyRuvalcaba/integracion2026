@@ -88,7 +88,12 @@ export default function LoginForm() {
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           {errorKind && <RegisterErrorMessage kind={errorKind} />}
 
-          <Button disabled={loading} type="submit" variant="primary">
+          <Button
+            data-testid="login-submit-button"
+            disabled={loading}
+            type="submit"
+            variant="primary"
+          >
             {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
           </Button>
         </form>

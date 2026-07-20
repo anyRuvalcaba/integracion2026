@@ -30,7 +30,7 @@ function classifyError(error) {
     return { kind: "TIMEOUT", original: error };
   }
 
-  if (error.request) {
+  if (error.request || (error.isAxiosError && !error.response)) {
     return { kind: "NETWORK", original: error };
   }
 

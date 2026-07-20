@@ -15,7 +15,7 @@ export default function CartView() {
 
       {items &&
         items.map(({product,quantity}) => (
-          <div className="cart-item" key={product._id}>
+          <div className="cart-item" key={product._id} data-testid={`cart-item-${product._id}`}>
             <div className="cart-item-image">
               <img src={product.imagesUrl[0]} alt={product.name} loading="lazy" />
             </div>

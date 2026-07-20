@@ -1,0 +1,11 @@
+{
+  "alice": {
+    "email": "alice@ecommerce.com",
+    "password": "password123",
+    "name": "Alice"
+  },
+  "admin": {
+    "email": "admin@ecommerce.com",
+    "password": "admin123"
+  }
+}

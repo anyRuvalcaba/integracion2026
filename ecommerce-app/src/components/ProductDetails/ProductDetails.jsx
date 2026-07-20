@@ -101,7 +101,7 @@ export default function ProductDetails({ productId }) {
   const stockLabel = stock > 0 ? "En stock" : "Agotado";
 
   return (
-    <div className="product-details-container">
+    <div className="product-details-container" data-testid="product-detail">
       <Breadcrumb
         items={[
           { label: "Inicio", to: "/" },
@@ -138,6 +138,7 @@ export default function ProductDetails({ productId }) {
           <div className="product-details-price">${price}</div>
           <div className="product-details-actions">
             <Button
+              data-testid="add-to-cart-button"
               variant="primary"
               size="lg"
               disabled={stock === 0}

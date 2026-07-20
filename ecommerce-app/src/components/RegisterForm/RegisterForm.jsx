@@ -138,7 +138,7 @@ export default function RegisterForm() {
               placeholder="Tu nombre"
             />
             {fieldErrors.name && (
-              <span className="field-error">{fieldErrors.name}</span>
+              <span className="field-error" data-testid="field-error-name">{fieldErrors.name}</span>
             )}
           </div>
 
@@ -152,7 +152,7 @@ export default function RegisterForm() {
               placeholder="tu@email.com"
             />
             {fieldErrors.email && (
-              <span className="field-error">{fieldErrors.email}</span>
+              <span className="field-error" data-testid="field-error-email">{fieldErrors.email}</span>
             )}
           </div>
 
@@ -166,7 +166,7 @@ export default function RegisterForm() {
               placeholder="Mínimo 6 caracteres"
             />
             {fieldErrors.password && (
-              <span className="field-error">{fieldErrors.password}</span>
+              <span className="field-error" data-testid="field-error-password">{fieldErrors.password}</span>
             )}
           </div>
 
@@ -180,7 +180,7 @@ export default function RegisterForm() {
               placeholder="Repite la contraseña"
             />
             {fieldErrors.confirmPassword && (
-              <span className="field-error">{fieldErrors.confirmPassword}</span>
+              <span className="field-error" data-testid="field-error-confirmPassword">{fieldErrors.confirmPassword}</span>
             )}
           </div>
 
@@ -194,13 +194,18 @@ export default function RegisterForm() {
               placeholder="+52 55 1234 5678"
             />
             {fieldErrors.phone && (
-              <span className="field-error">{fieldErrors.phone}</span>
+              <span className="field-error" data-testid="field-error-phone">{fieldErrors.phone}</span>
             )}
           </div>
 
           {errorKind && <RegisterErrorMessage kind={errorKind} />}
 
-          <Button disabled={loading} type="submit" variant="primary">
+          <Button
+            data-testid="register-submit-button"
+            disabled={loading}
+            type="submit"
+            variant="primary"
+          >
             {loading ? "Creando cuenta..." : "Crear cuenta"}
           </Button>
         </form>
