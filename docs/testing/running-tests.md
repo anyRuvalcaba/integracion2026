@@ -53,7 +53,7 @@ Requiere `ecommerce-app/cypress.env.json` (gitignored) con:
   "TEST_PRODUCT_ID": "<id real de un producto tras correr npm run seed>"
 }
 ```
-En CI estas variables se pasan como `CYPRESS_*` (ver `.github/workflows/frontend-tests.yml`).
+En CI, solo `TEST_USER_EMAIL`/`TEST_USER_PASSWORD` se pasan como `CYPRESS_TEST_USER_EMAIL`/`CYPRESS_TEST_USER_PASSWORD` (ver `.github/workflows/frontend-tests.yml`) — `TEST_ADMIN_EMAIL`, `TEST_ADMIN_PASSWORD` y `TEST_PRODUCT_ID` no están wireados en el workflow todavía; los specs que los necesiten fallarán en CI hasta que se agreguen como secrets.
 
 ## Todo junto (sin CI)
 
@@ -71,4 +71,4 @@ cd ecommerce-app && npm run test:all
 ## CI (GitHub Actions)
 
 - `.github/workflows/frontend-tests.yml` — corre en push/PR que tocan `ecommerce-app/**`. Jobs: `unit-tests` (Jest+RTL, sube reporte de cobertura), `e2e-tests` (levanta backend real + Cypress).
-- `.github/workflows/backend-tests.yml` — corre en push/PR que tocan `ecommerce-api/**`. Job único: `npm ci && npm test` (usa `mongodb-memory-server`, no requiere servicios externos).
+- `.github/workflows/backend-tests.yml` — corre en push/PR que tocan `ecommerce-api/**`. Job único: `npm ci && npm run test:coverage` (usa `mongodb-memory-server`, no requiere servicios externos).

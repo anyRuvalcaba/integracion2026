@@ -8,14 +8,14 @@ Que cada nivel de prueba cubra lo que le corresponde, sin que todo dependa de Cy
 
 ## Pirámide de pruebas
 
-Referencia: 60% unitarias / 25% integración / 15% E2E. Estado real actual (no es la distribución objetivo, es el conteo real hoy):
+Referencia: 60% unitarias / 25% integración / 15% E2E. Estado real actual (no es la distribución objetivo, es el conteo real hoy, todos los porcentajes sobre el total combinado de 249 tests):
 
-| Nivel | Tests reales | % del total |
+| Nivel | Tests reales | % del total combinado |
 |---|---|---|
-| Backend unitario | 22 | 11% |
-| Backend integración | 158 | 79% del backend, 44% del total combinado backend+frontend+E2E |
-| Frontend unitario/integración | 52 | 21% |
-| E2E (Cypress) | 16 | 6% |
+| Backend unitario | 22 | 8.8% |
+| Backend integración | 158 | 63.5% |
+| Frontend unitario/integración | 52 | 20.9% |
+| E2E (Cypress) | 17 | 6.8% |
 
 El backend está invertido respecto a la pirámide de referencia (más integración que unitario) porque no existe capa de servicios/validadores separada de los controllers — ver `known-issues.md`. No se corrige en esta fase; es una observación para cuando se aborden `TEST-002`/`TEST-006` del backlog.
 

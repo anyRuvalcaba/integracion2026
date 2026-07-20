@@ -18,7 +18,7 @@
 | INFRA-007 | docs | Limpieza de referencias residuales en `.agents/`: `anti-hallucination-reviewer.md` menciona IDs obsoletos `T-015/T-016` (no existen en este backlog), y quedan menciones informales a `CLAUDE.md` sin el prefijo `.claude/` en varios roles (no son comandos ejecutables, solo prosa descriptiva) | Baja | Pendiente |
 | TEST-001 | test | Backend: `GET /payment-methods/me` sin test de integración — endpoint activo en producción, único con 0% de cobertura (ver `docs/testing/known-issues.md`) | Alta | Pendiente |
 | TEST-002 | test | Backend: sin validación de `totalPrice`/stock en `createOrder` — riesgo de negocio real (dinero, sin cobertura); requiere implementar la regla antes de poder testearla | Alta | Pendiente |
-| TEST-003 | test | Frontend: `CartView`/página `Cart` sin test unitario — core flow, solo cubierto indirectamente vía `CartContext.test.jsx` | Alta | Pendiente |
+| TEST-003 | test | Frontend: `CartView`/página `Cart` sin test unitario — core flow, solo cubierto indirectamente vía `CartContext.test.jsx`. Cubre los escenarios `CART-001`/`CART-002` de `test-matrix.md`, marcados Crítica | Crítica | Pendiente |
 | TEST-004 | test | Frontend: `Checkout/Address` (`AddressForm`, `AddressList`, `AddressItem`) sin test unitario dedicado | Alta | Pendiente |
 | TEST-005 | test | Frontend: `Checkout/Payment` (`PaymentForm`, `PaymentList`, `PaymentItem`) sin test unitario dedicado | Alta | Pendiente |
 | TEST-006 | infra | Backend/Arquitectura: decidir destino de `cartController.addProductToCart` (montarla corrigiendo el bug de `BUG-005`, o eliminar código muerto) — requiere `architecture-reviewer` antes de implementar | Media | Pendiente |

@@ -44,6 +44,7 @@ Leyenda de columnas de nivel: Sí = tiene test real verificado | No = sin test |
 
 - **Total de escenarios mapeados:** 33
 - **Implementados completos:** 15
-- **Parciales:** 10
-- **Pendientes:** 8
+- **Parciales:** 7
+- **Pendientes:** 10
+- **Aceptados sin test directo (justificado):** 1 (`CONFIG-001`)
 - Ningún escenario mapeado corresponde a un módulo o archivo que no exista en el código real — verificado contra la auditoría del 2026-07-17/19.

@@ -21,7 +21,7 @@ Nota explícita heredada del documento original: no se modificó código de prod
 
 | Hallazgo | Archivo | Impacto |
 |---|---|---|
-| `GET /api/payment-methods/me` sin ningún test | `paymentMethodRoutes.js:75`, `paymentMethodController.js:12-20` | Único endpoint activo del proyecto con 0% de cobertura de integración. Ausente también de `.claude/CLAUDE.md` y de `docs/test-plans/backend-test-plan.md` antes de esta sesión. |
+| `GET /api/payment-methods/me` sin ningún test | `paymentMethodRoutes.js:72`, `paymentMethodController.js:12-20` | Único endpoint activo del proyecto con 0% de cobertura de integración. Ausente también de `.claude/CLAUDE.md` y de `docs/test-plans/backend-test-plan.md` antes de esta sesión. |
 | `cartController.addProductToCart` nunca montada | `cartController.js:136-166` (exportada, no importada en `cartRoutes.js`) | Código muerto desde el punto de vista de la API HTTP. Baja la cobertura de `cartController.js` a 61.5% líneas — el archivo con peor cobertura del backend. |
 | Sin validación de `totalPrice`/stock en `createOrder` | `orderController.js:34-55` | El cliente puede enviar cualquier `totalPrice`; no hay recálculo server-side contra `Product.price`, ni verificación/decremento de `Product.stock`. Riesgo de negocio real (dinero), sin ningún test posible hasta que la regla exista. |
 | Tabla "Resumen global" desactualizada | `docs/test-plans/backend-test-plan.md` (antes de esta sesión) | Sumaba 169 en vez de 180 — las matrices detalladas por módulo del mismo documento sí estaban correctas; solo la tabla resumen final no se había regenerado. Corregido en esta sesión. |

@@ -60,7 +60,7 @@ jobs:
 
       - name: Start backend and run seed
         working-directory: ecommerce-api
-        run: npm run seed && npm run dev &
+        run: npm run seed && (npm run dev &)
         env:
           MONGODB_URI: ${{ secrets.TEST_MONGODB_URI }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
