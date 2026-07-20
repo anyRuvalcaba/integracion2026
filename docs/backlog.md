@@ -29,7 +29,7 @@
 | TEST-011 | test | Frontend: `AuthContext` sin test directo — solo cubierto indirectamente vía `LoginForm`/`ProtectedRoute` | Media | Pendiente |
 | TEST-012 | test | Frontend: `CategoryProducts`/`SearchResultsList`/páginas wrapper (`Product.jsx`, `CategoryPage.jsx`, `SearchResults.jsx`) sin test | Media | Pendiente |
 | TEST-013 | test | E2E: sin spec dedicado a alta/edición de dirección y método de pago | Media | Pendiente |
-| TEST-014 | test | Frontend: correr `npm run test:coverage` para establecer la cobertura real y proponer thresholds iniciales — hoy no hay ninguno configurado (a diferencia del backend, que tiene 70/70/60/70) | Media | Pendiente |
+| TEST-014 | test | Frontend: cobertura real medida (2026-07-19) = 33.79% statements / 23.52% branches / 24% functions / 34.99% lines (`npm run test:coverage`) — configurar thresholds iniciales en `package.json` (a diferencia del backend, que ya tiene 70/70/60/70). El número real es bajo porque solo 7 de ~35 componentes tienen test; subirá conforme se cierren `TEST-003` a `TEST-012` | Media | Pendiente |
 | TEST-015 | test | Frontend: `layout/` (Header, Footer, Navigation, Breadcrumb, Newsletter) sin test | Baja | Pendiente |
 | TEST-016 | test | Frontend: `common/` (Button, Input, Badge, ErrorMessage, Icon, Loading) sin test directo | Baja | Pendiente |
 | TEST-017 | test | Frontend: `ThemeContext` sin test | Baja | Pendiente |
