@@ -26,11 +26,11 @@ Escribir los 20-40+ tests que cerrarían todos los gaps de una sola vez viola la
 
 ## Criterios de Aceptación
 
-- [ ] CA-1: `docs/testing/strategy.md`, `test-matrix.md`, `test-data.md`, `running-tests.md`, `known-issues.md` existen, con contenido verificado contra el código real (sin invención).
-- [ ] CA-2: Los 6 fixes concretos aplicados (CI frontend, CI backend nuevo, tabla resumen del test-plan, mapa de rutas en CLAUDE.md, corrección MSW→axios-mock-adapter en frontend-tester, eliminación de `setupPolyfills.js`), ninguno cambia comportamiento de la aplicación.
-- [ ] CA-3: `docs/backlog.md` tiene los 20 ítems `TEST-001` a `TEST-020` con prioridad y nivel de prueba, sin duplicar `INFRA-XXX`/`BUG-XXX` existentes.
-- [ ] CA-4: `cd ecommerce-api && npm test` y `cd ecommerce-app && npm test -- --watchAll=false` siguen pasando (o con el mismo resultado preexistente) después de los 6 fixes.
-- [ ] CA-5: El trabajo pasa por el loop de revisión (`anti-hallucination-reviewer` + `code-reviewer` pre-PR, `tech-reviewer` post-PR) y se entrega en PR contra `develop`.
+- [x] CA-1: `docs/testing/strategy.md`, `test-matrix.md`, `test-data.md`, `running-tests.md`, `known-issues.md` existen, con contenido verificado contra el código real. Corregidos tras `anti-hallucination-reviewer`/`code-reviewer` (2 rondas): la infraestructura de testing frontend, que solo existía en el working tree, se commiteó (`3264de4`) para que la documentación describa el árbol real, no una promesa.
+- [x] CA-2: Los 6 fixes concretos aplicados (CI frontend, CI backend nuevo, tabla resumen del test-plan, mapa de rutas en CLAUDE.md, corrección MSW→axios-mock-adapter en frontend-tester, eliminación de `setupPolyfills.js`), ninguno cambia comportamiento de la aplicación (los 3 cambios reales en archivos de producción — `Header.jsx`, `apiClient.js`, `Button.jsx` — vinieron junto con la infraestructura de testing commiteada, no son parte de "los 6 fixes").
+- [x] CA-3: `docs/backlog.md` tiene los 20 ítems `TEST-001` a `TEST-020` (más `INFRA-007` y `BUG-006` descubiertos durante la propia revisión) con prioridad y nivel de prueba, sin duplicar `INFRA-XXX`/`BUG-XXX` existentes.
+- [x] CA-4: `cd ecommerce-api && npm test` (180/180) y `cd ecommerce-app && npm run test:coverage` (52/52, cobertura real 33.79% medida) pasan sobre el árbol ya commiteado.
+- [ ] CA-5: El trabajo pasa por el loop de revisión (`anti-hallucination-reviewer` + `code-reviewer` pre-PR: 2 rondas cada uno, ambos APROBADO en la 2ª) — falta abrir el PR y la auditoría de `tech-reviewer` post-PR.
 
 ## Consideraciones de Seguridad
 
