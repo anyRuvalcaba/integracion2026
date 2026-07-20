@@ -5,6 +5,7 @@
 | ID | Tipo | Descripción | Prioridad | Estado |
 |---|---|---|---|---|
 | INFRA-001 | infra | Harness de modelos y agentes versionado (`.claude/model-policy.md`, materialización de 17 agentes, `dod-loop.md`, ADR-1) | Alta | Listo para merge — spec DONE, PR #1 con `tech-reviewer` APTO (3ª pasada), pendiente de aprobación del usuario |
+| TEST-000 | docs | Estrategia integral de pruebas — fase base (5 docs en `docs/testing/`, 6 fixes de infraestructura, infraestructura de testing frontend commiteada, 22 ítems de backlog derivados) | Alta | Listo para merge — spec DONE, PR #2 con `tech-reviewer` APTO (2ª pasada), pendiente de aprobación del usuario |
 | INFRA-002 | infra | Activar FASE 10.5 (baseline oficial, tag `baseline/v1.0`) cuando el backlog esté formalizado y priorizado en su totalidad | Media | Pendiente |
 | INFRA-003 | infra | Verificar manualmente que el plugin `codex@openai-codex` declarado en `.claude/settings.json` carga correctamente | Media | Pendiente |
 | INFRA-004 | infra | Mergear PR #1 (`infra/model-agent-harness` → `develop`) — `tech-reviewer` dio APTO en la 3ª pasada, listo técnicamente; falta la aprobación explícita del usuario para mergear | Alta | Listo para merge |

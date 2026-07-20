@@ -4,7 +4,7 @@
 - **Tipo:** docs
 - **Complejidad:** L
 - **Fecha:** 2026-07-19
-- **Estado:** IN PROGRESS
+- **Estado:** DONE
 
 ## Historia
 
@@ -30,7 +30,7 @@ Escribir los 20-40+ tests que cerrarían todos los gaps de una sola vez viola la
 - [x] CA-2: Los 6 fixes concretos aplicados (CI frontend, CI backend nuevo, tabla resumen del test-plan, mapa de rutas en CLAUDE.md, corrección MSW→axios-mock-adapter en frontend-tester, eliminación de `setupPolyfills.js`), ninguno cambia comportamiento de la aplicación (los 3 cambios reales en archivos de producción — `Header.jsx`, `apiClient.js`, `Button.jsx` — vinieron junto con la infraestructura de testing commiteada, no son parte de "los 6 fixes").
 - [x] CA-3: `docs/backlog.md` tiene los 20 ítems `TEST-001` a `TEST-020` (más `INFRA-007` y `BUG-006` descubiertos durante la propia revisión) con prioridad y nivel de prueba, sin duplicar `INFRA-XXX`/`BUG-XXX` existentes.
 - [x] CA-4: `cd ecommerce-api && npm test` (180/180) y `cd ecommerce-app && npm run test:coverage` (52/52, cobertura real 33.79% medida) pasan sobre el árbol ya commiteado.
-- [ ] CA-5: El trabajo pasa por el loop de revisión (`anti-hallucination-reviewer` + `code-reviewer` pre-PR: 2 rondas cada uno, ambos APROBADO en la 2ª). PR #2 abierto (https://github.com/anyRuvalcaba/integracion2026/pull/2). `tech-reviewer` reportó **CAMBIOS** en 1ª pasada: (1) el PR body marcaba CA-5 cumplido antes de que esta misma auditoría existiera — corregido, desmarcado; (2) recomendó documentar el fix funcional real de `OrderConfirmation.jsx` (`order.id || order._id`) en vez de dejarlo implícito bajo "solo data-testid" — corregido en `known-issues.md`. En remediación, pendiente 2ª pasada.
+- [x] CA-5: El trabajo pasó por el loop de revisión (`anti-hallucination-reviewer` + `code-reviewer` pre-PR: 2 rondas cada uno, ambos APROBADO en la 2ª). PR #2 abierto (https://github.com/anyRuvalcaba/integracion2026/pull/2). `tech-reviewer` corrió 2 pasadas: 1ª CAMBIOS (CA-5 marcado prematuro en el PR body, fix de `OrderConfirmation.jsx` sin documentar explícitamente), 2ª **APTO** (con una observación no bloqueante — una frase imprecisa en `known-issues.md` sobre cobertura de test, corregida antes de este cierre). Loop cerrado en 2 iteraciones, sin necesidad de escalar al usuario.
 
 ## Consideraciones de Seguridad
 
@@ -70,19 +70,29 @@ Escribir los 20-40+ tests que cerrarían todos los gaps de una sola vez viola la
 - **Riesgos que requieren seguimiento:** `TEST-002` (validación de dinero) es el de mayor severidad real pendiente.
 - **Items que deben convertirse en backlog:** los 20 ítems `TEST-001` a `TEST-020` — ver sección de backlog más abajo, se agregan a `docs/backlog.md` como parte de este mismo pendiente.
 
-## Resultados (se completa al cerrar)
-- **Fecha de cierre:**
-- **CAs cumplidos:**
-- **CAs no cumplidos:**
-- **Deuda técnica generada:**
-- **Lecciones aprendidas:**
-- **Pendientes abiertos confirmados:**
-- **Gaps no resueltos:**
-- **Trabajo fuera de alcance confirmado:**
-- **Backlog derivado creado:**
-- **Referencias a historias/tareas creadas:**
+## Resultados
+- **Fecha de cierre:** 2026-07-19
+- **CAs cumplidos:** CA-1, CA-2, CA-3, CA-4, CA-5 (todos).
+- **CAs no cumplidos:** ninguno.
+- **Deuda técnica generada:** ninguna nueva sobre la documentación de testing. Se registran 3 hallazgos reales de aplicación descubiertos como efecto colateral de la auditoría (`BUG-006` imagesUrl/imageURL, y el fix ya aplicado de `OrderConfirmation.jsx` documentado en `known-issues.md`), y 22 ítems de backlog para el trabajo de tests futuro (`TEST-001` a `TEST-020`, `INFRA-007`).
+- **Lecciones aprendidas:** (1) documentar "el estado real del código" exige verificar contra lo *commiteado*, no contra el working tree — el hallazgo raíz de `anti-hallucination-reviewer` (infraestructura de testing frontend nunca commiteada en ninguna rama) fue el más grave de todo este pendiente y obligó a expandir el alcance más allá de "solo docs" para que la documentación no describiera una promesa como si fuera un hecho. (2) El loop pre-PR (anti-hallucination-reviewer + code-reviewer) y el post-PR (tech-reviewer) atrapan clases de error distintas y complementarias: el primero encontró errores aritméticos internos de los documentos y el hallazgo raíz de commits faltantes; el segundo encontró un claim prematuro en el PR body (mismo patrón que en el ciclo del harness) y una imprecisión de una frase que ni siquiera el propio `code-reviewer` había señalado.
+- **Pendientes abiertos confirmados:** ver sección anterior — sin cambios respecto a lo ya documentado.
+- **Gaps no resueltos:** ninguno bloqueante.
+- **Trabajo fuera de alcance confirmado:** escritura de los 20 ítems `TEST-XXX`, decisión de arquitectura sobre `addProductToCart` (`TEST-006`), thresholds de cobertura frontend (`TEST-014`, ya con número real medido), evaluación de `package.json` raíz (`TEST-019`).
+- **Backlog derivado creado:** sí — `TEST-000` (este mismo pendiente), `TEST-001` a `TEST-020`, `INFRA-007`, `BUG-006` en `docs/backlog.md`.
+- **Referencias a historias/tareas creadas:** `TEST-000` (este spec, DONE), `TEST-001` a `TEST-020`, `INFRA-007`, `BUG-006` (ver `docs/backlog.md`).
 
 ## Matriz de cierre
 
 | Ítem detectado | Estado | Acción |
 |---|---|---|
+| 5 documentos de `docs/testing/` | Confirmado | Cerrar |
+| 6 fixes concretos de infraestructura | Confirmado | Cerrar |
+| Infraestructura de testing frontend commiteada (hallazgo raíz de anti-hallucination-reviewer) | Confirmado | Cerrar |
+| 22 ítems de backlog (`TEST-001..020`, `INFRA-007`, `BUG-006`) | Confirmado | Cerrar |
+| `anti-hallucination-reviewer` (2 rondas) + `code-reviewer` (2 rondas) | Confirmado — APROBADO | Cerrar |
+| PR #2 abierto contra `develop` | Confirmado | Cerrar |
+| Auditoría de `tech-reviewer` sobre PR #2 (2 pasadas: CAMBIOS, APTO) | Confirmado — APTO | Cerrar |
+| `TEST-002` (sin validación de total/stock en `createOrder`) | Fuera de alcance | Backlog `TEST-002` |
+| `TEST-006` (destino de `addProductToCart`) | Fuera de alcance | Backlog `TEST-006`, requiere `architecture-reviewer` |
+| Escritura de tests nuevos (20 ítems `TEST-XXX`) | Fuera de alcance | Backlog, pipeline `qa-test-designer`→`backend-tester`/`frontend-tester` |
