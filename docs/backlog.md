@@ -38,3 +38,4 @@
 | TEST-018 | test | E2E: sin spec de búsqueda/categorías, Orders, WishList, Profile | Baja | Pendiente |
 | TEST-019 | infra | Root: evaluar si conviene un `package.json` raíz con scripts unificados (`test:all`, etc.) — requiere `architecture-reviewer`, decisión estructural | Baja | Pendiente |
 | TEST-020 | test | Backend: `src/config/db.conf.js` sin test (0% cobertura) — ya aceptado como bajo impacto en `docs/test-plans/backend-test-plan.md` | Baja | Pendiente |
+| PERF-001 | perf | Frontend: auditoría de performance (lazy loading por ruta/componente, code splitting, caché de datos, carga de imágenes, reducción de re-renders) — requiere `architecture-reviewer` antes de implementar por el riesgo sobre páginas sin cobertura de test (`TEST-003` a `TEST-012`) | Media | Pendiente |
