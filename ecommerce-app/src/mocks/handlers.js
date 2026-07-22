@@ -16,7 +16,7 @@ export const SAMPLE_PRODUCTS = [
     description: 'Switches Cherry MX Blue.',
     price: 899,
     stock: 10,
-    imagesUrl: ['https://placehold.co/600x400'],
+    imageURL: 'https://placehold.co/600x400',
     category: { _id: 'cat001', name: 'Periféricos' },
   },
   {
@@ -25,7 +25,7 @@ export const SAMPLE_PRODUCTS = [
     description: 'Mouse de alta precisión.',
     price: 499,
     stock: 0,
-    imagesUrl: ['https://placehold.co/600x400'],
+    imageURL: 'https://placehold.co/600x400',
     category: { _id: 'cat001', name: 'Periféricos' },
   },
 ];
