@@ -4,7 +4,7 @@
 - **Tipo:** refactor
 - **Complejidad:** M
 - **Fecha:** 2026-07-21
-- **Estado:** DRAFT
+- **Estado:** DONE
 
 ---
 
@@ -234,32 +234,85 @@ Herramientas usadas: únicamente las ya presentes en el proyecto — `npm run bu
 
 ---
 
+## Implementación (fase ejecutada por `frontend-builder`)
+
+Ejecutada sobre el working tree activo de `docs/estrategia-testing-integral` (sin rama nueva, por indicación del orchestrator), con `BUG-001`/`BUG-002`/`BUG-003`/`BUG-006` ya resueltos en ese mismo working tree (no se volvieron a tocar).
+
+**Nota de trazabilidad:** los identificadores `I-1` a `I-9` que siguen en esta sección son checkpoints de la fase de implementación (definidos por el orchestrator al delegar a `frontend-builder`, derivados de `## Decisiones de Diseño`), no nuevos Criterios de Aceptación del spec — los únicos CA formales de este documento son `CA-1` a `CA-7` (`## Criterios de Aceptación`), correspondientes a la fase de diagnóstico. Renombrados de `CA-Ix` a `I-x` tras observación de `anti-hallucination-reviewer` para no simular trazabilidad formal inexistente.
+
+### 1. Lazy loading por ruta (`src/components/App/App.jsx`)
+
+Se reemplazaron los imports estáticos por `React.lazy(() => import(...))` para las 11 páginas identificadas como candidatas en `## Decisiones de Diseño → 1`, en el orden de prioridad documentado: `Checkout` (más alta) → `Product`, `CategoryPage` (alta) → `Orders` (media-alta) → `Cart`, `SearchResults`, `Profile`, `OrderConfirmation` (media) → `Login`, `WishList`, `Settings` (baja). `Home`, `Layout`, `Header`, `Footer`, `Navigation`, `AuthProvider`, `CartProvider` y `ProtectedRoute` permanecen con import estático, sin cambios, tal como exige `## Decisiones de Diseño → 3`. `AuthProvider` sigue envolviendo a `CartProvider` (orden no alterado). La ruta `/settings` duplicada (líneas originales 66-73/74-81) se dejó intacta — es un hallazgo de calidad de código documentado en `## Riesgos y Deuda Técnica`, explícitamente fuera de alcance de este pendiente de performance.
+
+### 2. `Suspense` boundary (I-3)
+
+Se optó por **un único `<Suspense>` global** envolviendo `<Routes>` (dentro de `<Layout>`, fuera de `<BrowserRouter>` en cuanto a jerarquía no aplica — está dentro de `BrowserRouter` y `Layout`), con `fallback={<Loading>Cargando...</Loading>}` reutilizando el componente `Loading` existente (`src/components/common/Loading/Loading.jsx`), sin crear un nuevo fallback.
+
+Justificación de granularidad: `ProtectedRoute` se importa de forma estática y envuelve varias rutas lazy (`/checkout`, `/profile`, `/wishlist`, `/orders`, `/settings`). Un `Suspense` por ruta habría requerido envolver el `<Route element={...}>` de cada ruta individualmente (o insertar `<Suspense>` dentro de `ProtectedRoute`, lo cual acopla un componente de autorización a una decisión de code-splitting que no le corresponde). Un único boundary global es más simple, cubre tanto rutas protegidas como públicas de manera uniforme, y el fallback (`Loading`) es genérico y liviano — no hay necesidad de fallbacks distintos por ruta en este proyecto. El costo (un solo loader visible por navegación a cualquier ruta lazy, incluso las rápidas) se considera aceptable dado el tamaño de los chunks generados (ver `## Resultados`).
+
+### 3. Caché en memoria (I-4, `ADR-2`)
+
+Implementado en `src/services/productsService.js` (`getAllProducts`, `getProductById`) y `src/services/categoryService.js` (`getAllCategories`, `getProductsByCategoryAndChildren`): caché en memoria de módulo (`let`/`Map`, no `localStorage`), TTL de 60s, invalidación manual al final de `createProduct`/`updateProduct`/`deleteProduct` y `createCategory`/`updateCategory`/`deleteCategory`. `getCategoryById` y `searchProducts` **no** se cachearon — el `ADR-2` y `I-4` solo especifican `getAllCategories`/`getProductsByCategoryAndChildren` y `getAllProducts`/`getProductById`, respectivamente; no se extendió el alcance. No se tocó `paymentService.js`, `shippingService.js` ni ningún archivo relacionado con `payment-methods`/`addresses`, conforme a la restricción de seguridad.
+
+### 4. `loading="lazy"` en imágenes (I-5)
+
+Agregado a `components/ProductCard/ProductCard.jsx` (`<img>` de la card) y `components/ProductDetails/ProductDetails.jsx` (`<img>` del detalle). `CartView.jsx` ya lo tenía y ya usa el campo real `imageURL` (string) tras la resolución de `BUG-006` en el working tree — no requirió cambios.
+
+### 5. Memoización de `CartContext.jsx` (I-6)
+
+Se envolvió el objeto `value` del provider en `useMemo` (deps: `items, count, total, addItem, updateQuantity, removeItem, clearCart, loading, error`) y `addItem`, `updateQuantity`, `removeItem`, `clearCart` en `useCallback`. Para que estas memoizaciones fueran correctas (sin closures obsoletas), también se envolvieron en `useCallback` las funciones internas `syncWithApi` (deps: `isAuthenticated, cartid, user`) y `changeItems` (dep: `syncWithApi`), de las que `addItem`/`updateQuantity`/`removeItem`/`clearCart` dependen — sin este paso adicional, memoizar solo las cuatro funciones públicas habría dejado `changeItems`/`syncWithApi` recreándose en cada render y roto la estabilidad de referencia buscada. Esto es una extensión mínima y necesaria del rango de líneas sugerido en I-6 (~78-106), no un refactor adicional. `BUG-002`/`BUG-003` no se tocaron de nuevo — la memoización se aplicó sobre el código ya corregido presente en el working tree.
+
+### 6. Medición antes/después (I-7)
+
+`npm run build` ejecutado con `REACT_APP_API_URL=http://localhost:4000/api` explícito en el shell (`.env.development` no aplica a `build`).
+
+| Métrica | Baseline (spec, antes) | Después de la implementación |
+|---|---|---|
+| `main.js` raw | 375,934 bytes | 341,078 bytes (−34,856 bytes, −9.3%) |
+| `main.js` gzip | 114,261 bytes | 107,221 bytes (−7,040 bytes, −6.2%) |
+| `main.css` gzip | 12,178 bytes | 8,949 bytes (−3,229 bytes, −26.5%) |
+| Chunks JS adicionales | 1 (residual de Webpack, no `React.lazy`) | 12 (11 de rutas `React.lazy` + 1 residual) |
+| Tamaño total de chunks JS (suma, gzip) | 1,747 bytes | 17,662 bytes |
+| Rutas con `React.lazy` | 0 de 13 rutas montadas | 11 de 13 (todas las candidatas de `## Decisiones de Diseño → 1`, excepto `/` y el catch-all `*`, que no aplican) |
+| Componentes con `React.memo` | 0 | 0 (sin cambios — no era parte del alcance, ver `## Decisiones de Diseño → 7`) |
+| Hooks `useCallback` | 0 | 6 (`syncWithApi`, `changeItems`, `addItem`, `updateQuantity`, `removeItem`, `clearCart`, todos en `CartContext.jsx`) |
+
+Lectura: el bundle que descarga **cualquier** usuario en el primer render (`main.js` + `main.css`) se redujo 7,040 + 3,229 = 10,269 bytes gzip (~8.5% del total crítico anterior de 126,439 bytes). El costo se difiere a 11 chunks que solo se descargan cuando el usuario navega a la ruta correspondiente. El total sumado de todos los artefactos JS (main + chunks) creció de 116,008 a 124,883 bytes gzip (+7,875 bytes, +6.8%) por el overhead de runtime de Webpack duplicado por chunk (`react-refresh`/module wrappers) — este crecimiento total es esperado y aceptado por el spec (`## Decisiones de Diseño → 8`, punto 3c: "no debe crecer significativamente"; se considera dentro de rango dado que la ganancia real es en el bundle crítico de entrada, no en el total).
+
+No se ejecutó Lighthouse (paso 4 del plan de medición) en esta sesión: requiere `npm start` con un backend real corriendo en `localhost:4000` para navegar `/checkout` con datos reales, lo cual excede el entorno de ejecución de este agente (sin navegador headless disponible en este contexto). Se documenta como pendiente abierto — ver más abajo.
+
+### 7. Tests (I-8)
+
+Ningún test existente monta `<App />` directamente (confirmado: `Checkout.test.jsx`, `ProtectedRoute.test.jsx`, `CartContext.test.jsx` y el resto renderizan páginas/componentes de forma aislada con `MemoryRouter` + `Routes` propios), por lo que el `Suspense`/`React.lazy` agregado en `App.jsx` no afecta a ningún test — no fue necesario ajustar ningún test existente. Resultado: `npm run test:run` → **52/52 tests pasando**, 7 suites, sin skips.
+
+---
+
 ## Pendientes Abiertos y Gaps Detectados
 
 > Esta sección se completa durante la implementación y es obligatoria antes del cierre.
 
-- **Funcionalidades faltantes:** N/A — este spec no implementa funcionalidad, es diagnóstico.
-- **Comportamientos inconsistentes detectados:** ver `## Riesgos y Deuda Técnica` (rutas duplicadas, `Register` no montado, `Breadcrumb` con prop mal nombrada, discrepancias entre `.claude/CLAUDE.md` y `services/*.js`).
-- **Gaps entre frontend y backend:** `BUG-006` confirmado también en `ecommerce-api/src/seed/productsCategories.js` (campo `imagesUrl` no existe en el schema `Product`).
-- **Persistencia pendiente de migrar:** N/A para este spec — no se toca la persistencia local existente (`storageHelpers.js`).
-- **Decisiones aplazadas:** división de `Icon.jsx` en módulos por icono individual (evaluación futura, no en este spec); caché en memoria de `productsService.js`/`categoryService.js` (diseño propuesto aquí, implementación aplazada a fase posterior sujeta a `architecture-reviewer`).
-- **Trabajo fuera de alcance en esta iteración:** implementación de `React.lazy`/`Suspense`, memoización de `CartContext.jsx`, corrección de `BUG-001`/`BUG-002`/`BUG-003`/`BUG-006`, limpieza de `PurchaseOrder.jsx`, montaje de ruta `/register`.
-- **Riesgos que requieren seguimiento:** ejecución del plan de medición está bloqueada por `BUG-001` hasta su resolución.
-- **Items que deben convertirse en backlog:** pendiente de definir junto con `architecture-reviewer` al cerrar este spec — candidatos: implementación de lazy loading por ruta (prioridad `/checkout` primero), memoización de `CartContext` (coordinada con `BUG-002`/`BUG-003`), corrección de `loading="lazy"` + fallback en `CartView.jsx`/`ProductCard.jsx`/`ProductDetails.jsx` (bloqueado por `BUG-006`), caché en memoria de catálogo/categorías.
+- **Funcionalidades faltantes:** N/A — no se agregó funcionalidad nueva, solo optimizaciones no funcionales (lazy loading, caché, memoización, `loading="lazy"`).
+- **Comportamientos inconsistentes detectados:** los ya documentados en `## Riesgos y Deuda Técnica` (rutas duplicadas `/settings`, `Register` no montado, `Breadcrumb` con prop mal nombrada, discrepancias entre `.claude/CLAUDE.md` y `services/*.js`) — ninguno se corrigió, siguen intactos y fuera de alcance.
+- **Gaps entre frontend y backend:** ninguno nuevo. `BUG-006` (seed backend con campo `imagesUrl` inexistente en el schema) sigue documentado, no se tocó `ecommerce-api/` (fuera del alcance de este agente).
+- **Persistencia pendiente de migrar:** N/A — no se tocó `storageHelpers.js`.
+- **Decisiones aplazadas:** división de `Icon.jsx` por icono (no evaluada en esta fase); posible reconsideración de Opción 1 (TanStack Query) si crece el número de servicios que necesiten caché — ver `ADR-2 → Consecuencias`.
+- **Trabajo fuera de alcance confirmado en esta iteración:** Lighthouse antes/después de `/` y `/checkout` (paso 4 del plan de medición) no se ejecutó — requiere navegador y backend corriendo, no disponible en este entorno de agente; queda como pendiente para verificación manual o para `code-reviewer`/QA con navegador real. Limpieza de `PurchaseOrder.jsx`, montaje de `/register`, corrección de la ruta `/settings` duplicada — no se tocaron, siguen documentados como deuda preexistente.
+- **Riesgos que requieren seguimiento:** el crecimiento del tamaño total sumado de artefactos JS (+6.8%, ver tabla de resultados) debe monitorearse si se agregan más rutas `React.lazy` en el futuro, para no acumular overhead de runtime desproporcionado.
+- **Items que deben convertirse en backlog:** (a) ejecutar Lighthouse antes/después sobre `/` y `/checkout` con backend real corriendo, para completar el punto 4 del plan de medición; (b) evaluación futura de división de `Icon.jsx`; (c) los hallazgos de calidad de código ya listados en `## Riesgos y Deuda Técnica` que siguen sin dueño (`/settings` duplicada, `Register` no montado, `Breadcrumb` con prop `items`/`categories`, discrepancias de `.claude/CLAUDE.md` con `services/*.js`).
 
 ---
 
 ## Resultados (se completa al cerrar)
-- **Fecha de cierre:**
-- **CAs cumplidos:**
-- **CAs no cumplidos:**
-- **Deuda técnica generada:**
-- **Lecciones aprendidas:**
-- **Pendientes abiertos confirmados:**
-- **Gaps no resueltos:**
-- **Trabajo fuera de alcance confirmado:**
-- **Backlog derivado creado:**
-- **Referencias a historias/tareas creadas:**
+- **Fecha de cierre:** 2026-07-22. `code-reviewer` → APROBADO (7 observaciones no bloqueantes). `anti-hallucination-reviewer` → APTO (0 alucinaciones; 3 inconsistencias, una de trazabilidad de IDs ya corregida en este documento — `CA-Ix` renombrado a `I-x` — y dos preexistentes fuera de alcance). Cerrado por el orchestrator.
+- **CAs cumplidos:** CA-1 a CA-7 (fase de diagnóstico, ya cerrados por `spec-writer`/`architecture-reviewer`). Checkpoints de implementación cumplidos: I-1 (lazy loading de 11 rutas en el orden de prioridad del spec), I-2 (Home/layout/context sin lazy), I-3 (Suspense global documentado), I-4 (caché en memoria en `productsService.js`/`categoryService.js` con TTL 60s e invalidación manual), I-5 (`loading="lazy"` en `ProductCard.jsx`/`ProductDetails.jsx`), I-6 (memoización de `CartContext.jsx` con `useMemo`/`useCallback`), I-7 (build ejecutado y comparado contra baseline, ver tabla arriba), I-8 (52/52 tests pasando, sin ajustes necesarios), I-9 (este documento, estado `IN REVIEW`).
+- **CAs no cumplidos:** ninguno de CA-1 a CA-7 ni de los checkpoints I-1 a I-9 quedó incumplido. El punto 4 del plan de medición original del spec (`## Decisiones de Diseño → 8`, Lighthouse) no se ejecutó por falta de navegador/backend en este entorno — no era parte explícita de I-1 a I-9 (que solo pide `npm run build` antes/después), se documenta como pendiente abierto, no como CA incumplido.
+- **Deuda técnica generada:** ninguna nueva de fondo. Se documenta la extensión menor de I-6 (envolver también `syncWithApi`/`changeItems` en `useCallback`, no solo las 4 funciones públicas) como necesaria para la corrección de la memoización, no como deuda.
+- **Lecciones aprendidas:** memoizar funciones públicas de un contexto con `useCallback` sin memoizar también sus dependencias internas (`syncWithApi`, `changeItems`) produce una memoización cosmética que no estabiliza referencias reales — hay que memoizar la cadena completa de funciones de las que depende cada callback público.
+- **Pendientes abiertos confirmados:** Lighthouse antes/después sobre `/` y `/checkout` (bloqueado por falta de entorno navegador+backend en esta sesión).
+- **Gaps no resueltos:** todos los ya documentados en `## Riesgos y Deuda Técnica` de la fase de diagnóstico (rutas duplicadas, `Register` no montado, `Breadcrumb`, discrepancias de `.claude/CLAUDE.md`) — ninguno estaba en el alcance de esta implementación.
+- **Trabajo fuera de alcance confirmado:** `React.memo` en `ProductCard`/componentes de lista (spec explícitamente no lo recomienda sin antes estabilizar `CartContext`, ya hecho aquí, pero no se agregó `React.memo` porque no estaba en los checkpoints I-x asignados); división de `Icon.jsx`; corrección de rutas duplicadas/`Register`/`Breadcrumb`.
+- **Backlog derivado creado:** sí — `PERF-002` (Lighthouse `/` y `/checkout` antes/después), `PERF-003` (invalidación cruzada de caché entre `productsService.js`/`categoryService.js` detectada por `code-reviewer`), `PERF-004` (fixtures de test con `imagesUrl` obsoleto: `CartContext.test.jsx`, `ProductCard.test.jsx`, `ProductDetails.test.jsx`, `Checkout.test.jsx`), agregados a `docs/backlog.md` por el orchestrator.
+- **Referencias a historias/tareas creadas:** `PERF-002`, `PERF-003`, `PERF-004` en `docs/backlog.md`.
 
 ---
 
@@ -267,4 +320,14 @@ Herramientas usadas: únicamente las ya presentes en el proyecto — `npm run bu
 
 | Ítem detectado | Estado | Acción |
 |---|---|---|
-| | | |
+| I-1 Lazy loading de 11 rutas priorizadas | Cumplido | Implementado en `App.jsx`; verificado con build (11 chunks nuevos) |
+| I-2 Home/layout/context sin lazy | Cumplido | Verificado por inspección de `App.jsx` — imports estáticos intactos |
+| I-3 Suspense boundary con `Loading` | Cumplido | Boundary global documentado en `## Implementación → 2` |
+| I-4 Caché en memoria `productsService`/`categoryService` | Cumplido | TTL 60s, invalidación manual tras mutaciones, sin tocar `payment-methods`/`addresses` |
+| I-5 `loading="lazy"` en `ProductCard`/`ProductDetails` | Cumplido | Agregado; `CartView.jsx` ya lo tenía |
+| I-6 Memoización de `CartContext.jsx` | Cumplido | `useMemo` en `value`, `useCallback` en las 4 funciones públicas + 2 internas necesarias |
+| I-7 Build antes/después documentado | Cumplido | Ver tabla en `## Implementación → 6` |
+| I-8 52/52 tests pasando | Cumplido | Ningún test requirió ajuste (ninguno monta `<App />`) |
+| I-9 Spec actualizado, estado `IN REVIEW` | Cumplido | Este documento |
+| Lighthouse antes/después `/` y `/checkout` | Pendiente | Requiere navegador + backend real; recomendado como backlog de seguimiento |
+| Rutas `/settings` duplicadas, `Register` no montado, `Breadcrumb` prop mal nombrada, discrepancias `.claude/CLAUDE.md` | Pendiente (preexistente) | Fuera de alcance de `PERF-001`; documentado, sin dueño asignado |
