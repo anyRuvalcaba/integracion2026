@@ -121,7 +121,7 @@ export function CartProvider({ children }) {
       quantity: item.quantity,
     }));
 
-    if (!cartId) {
+    if (!cartid) {
       const created = await createCart(user.id, products);
       setCartId(created._id);
     }else {
