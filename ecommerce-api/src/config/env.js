@@ -30,4 +30,16 @@ const CORS_ALLOWED_ORIGINS = (
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-export { NODE_ENV, isProduction, PORT, MONGODB_URI, FRONTEND_URL, CORS_ALLOWED_ORIGINS };
+const ENABLE_DOCS = process.env.ENABLE_DOCS === "true";
+const DOCS_ENABLED = !isProduction || ENABLE_DOCS;
+
+export {
+  NODE_ENV,
+  isProduction,
+  PORT,
+  MONGODB_URI,
+  FRONTEND_URL,
+  CORS_ALLOWED_ORIGINS,
+  ENABLE_DOCS,
+  DOCS_ENABLED,
+};

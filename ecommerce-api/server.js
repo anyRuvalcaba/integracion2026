@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { PORT, CORS_ALLOWED_ORIGINS } from "./src/config/env.js";
+import swaggerUi from "swagger-ui-express";
+import { PORT, CORS_ALLOWED_ORIGINS, DOCS_ENABLED } from "./src/config/env.js";
+import swaggerSpec from "./src/config/swagger.js";
 import connectDB from "./src/config/db.conf.js";
 import errorHandler from "./src/middlewares/errorHandler.js";
 import logger from "./src/middlewares/logger.js";
@@ -30,6 +32,13 @@ connectDB();
 app.get("/", (req, res) => {
   res.send("API Ecommerce con MongoDB");
 });
+
+if (DOCS_ENABLED) {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.get("/api-docs.json", (req, res) => {
+    res.json(swaggerSpec);
+  });
+}
 
 app.use("/api", routes);
 

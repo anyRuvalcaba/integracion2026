@@ -79,8 +79,66 @@ const updateOrderStatusValidation = [
     .withMessage("Invalid payment status"),
 ];
 
+/**
+ * @openapi
+ * /orders:
+ *   get:
+ *     summary: Listar todas las órdenes (admin)
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de órdenes (populado con user, products.productId, address, paymentMethod)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: { $ref: "#/components/schemas/Order" }
+ *       401:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/UnauthorizedError" }
+ *       403:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/ForbiddenError" }
+ */
 router.get("/orders", authMiddleware, isAdmin, getOrders);
 
+/**
+ * @openapi
+ * /orders/{id}:
+ *   get:
+ *     summary: Obtener una orden por id
+ *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad — no valida que la orden pertenezca al usuario del JWT, por lo que cualquier usuario autenticado puede leer cualquier orden por id."
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Orden encontrada (populado con user, products.productId, address, paymentMethod)
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/Order" }
+ *       401:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/UnauthorizedError" }
+ *       404:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/NotFoundError" }
+ *       422:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/ValidationError" }
+ */
 router.get(
   "/orders/:id",
   authMiddleware,
@@ -89,6 +147,51 @@ router.get(
   getOrderById,
 );
 
+/**
+ * @openapi
+ * /orders:
+ *   post:
+ *     summary: Crear una orden
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user: { type: string, description: "ObjectId de User, tomado del body." }
+ *               products:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     productId: { type: string }
+ *                     quantity: { type: integer, minimum: 1 }
+ *                     price: { type: number, minimum: 0 }
+ *                   required: [productId, quantity, price]
+ *               address: { type: string }
+ *               paymentMethod: { type: string }
+ *               totalPrice: { type: number, minimum: 0 }
+ *               shippingCost: { type: number, minimum: 0 }
+ *             required: [products, address, paymentMethod, totalPrice]
+ *     responses:
+ *       201:
+ *         description: Orden creada, populada solo con user y products.productId (a diferencia del GET, no popula address ni paymentMethod en la creación).
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/Order" }
+ *       401:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/UnauthorizedError" }
+ *       422:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/ValidationError" }
+ */
 router.post(
   "/orders",
   authMiddleware,
@@ -97,6 +200,47 @@ router.post(
   createOrder,
 );
 
+/**
+ * @openapi
+ * /orders/{id}:
+ *   put:
+ *     summary: Actualizar el estado de una orden
+ *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad — cualquier usuario autenticado puede cambiar el estado de cualquier orden ajena."
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status: { type: string, enum: [pending, processing, shipped, delivered, cancelled] }
+ *               paymentStatus: { type: string, enum: [pending, paid, failed, refunded] }
+ *     responses:
+ *       200:
+ *         description: Orden actualizada sin populate (devuelve ObjectIds crudos, a diferencia del GET).
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/Order" }
+ *       401:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/UnauthorizedError" }
+ *       404:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/NotFoundError" }
+ *       422:
+ *         content:
+ *           application/json:
+ *             schema: { $ref: "#/components/schemas/ValidationError" }
+ */
 router.put(
   "/orders/:id",
   authMiddleware,
