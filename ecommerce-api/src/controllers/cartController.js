@@ -29,6 +29,9 @@ async function getCartById(req, res, next) {
 async function getCartByUser(req, res, next) {
   try {
     const userId = req.params.id;
+    if (req.user.userId !== userId && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
     const cart = await Cart.findOne({ user: userId })
       .populate("user")
       .populate("products.product");
@@ -133,38 +136,6 @@ async function deleteCart(req, res, next) {
   }
 }
 
-async function addProductToCart(req, res, next) {
-  try {
-    const { userId, productId, quantity = 1 } = req.body;
-    let cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      cart = new Cart({
-        user: userId,
-        products: [{ product: productId, quantity }],
-      });
-    } else {
-      const existingProductIndex = cart.products.findIndex(
-        (item) => item.product.toString() === productId,
-      );
-
-      if (existingProductIndex >= 0) {
-        cart.products[existingProductIndex].quantity += quantity;
-      } else {
-        cart.products.push({ product: productId, quantity });
-      }
-    }
-
-    await cart.save();
-    await cart.populate("user");
-    await cart.populate("products.productId");
-
-    res.json(cart);
-  } catch (error) {
-    next(error);
-  }
-}
-
 export {
   getCarts,
   getCartById,
@@ -172,5 +143,4 @@ export {
   createCart,
   updateCart,
   deleteCart,
-  addProductToCart,
 };

@@ -16,6 +16,12 @@ function invalidateCategoriesCache() {
   productsByCategoryCache.clear();
 }
 
+// Expuesto para que productsService.js invalide este caché al mutar un producto
+// (un producto puede pertenecer a una categoría cuyo listado ya esté cacheado).
+export function invalidateProductsByCategoryCache() {
+  productsByCategoryCache.clear();
+}
+
 const getAllCategories = async () => {
   if (isFresh(allCategoriesCache)) {
     return allCategoriesCache.data;

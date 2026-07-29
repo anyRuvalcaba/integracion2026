@@ -14,7 +14,7 @@ const SAMPLE_PRODUCT = {
   description: 'Teclado con switches Cherry MX Blue.',
   price: 899,
   stock: 10,
-  imagesUrl: ['https://placehold.co/600x400'],
+  imageURL: 'https://placehold.co/600x400',
   category: { name: 'Periféricos', id: 'cat001' },
 };
 
