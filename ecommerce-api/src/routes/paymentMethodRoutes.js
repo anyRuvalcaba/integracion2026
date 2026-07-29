@@ -217,7 +217,7 @@ router.post(
  * /payment-methods/{id}:
  *   put:
  *     summary: Actualizar un método de pago
- *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad sobre el método de pago."
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [PaymentMethods]
  *     security:
  *       - bearerAuth: []
@@ -237,7 +237,7 @@ router.post(
  *               cardNumber: { type: string, maxLength: 16 }
  *     responses:
  *       200:
- *         description: "ADVERTENCIA — BUG-007 (backlog, seguridad Alta): a diferencia del POST, esta respuesta SÍ incluye el campo cvv en texto plano. Método de pago actualizado, populado con user."
+ *         description: "Manejo de datos sensibles en esta respuesta sujeto a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-007). Método de pago actualizado, populado con user."
  *         content:
  *           application/json:
  *             schema: { $ref: "#/components/schemas/PaymentMethod" }
@@ -267,7 +267,7 @@ router.put(
  * /payment-methods/{id}:
  *   delete:
  *     summary: Eliminar un método de pago
- *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad sobre el método de pago."
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [PaymentMethods]
  *     security:
  *       - bearerAuth: []

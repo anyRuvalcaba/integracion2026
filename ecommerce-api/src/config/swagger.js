@@ -203,8 +203,7 @@ const definition = {
           cvv: {
             type: "string",
             description:
-              "BUG-007: excluido en la respuesta de POST (createPaymentMethod borra este campo antes de responder), " +
-              "pero SÍ se devuelve en texto plano en la respuesta de PUT (updatePaymentMethod). Ver docs/backlog.md.",
+              "Manejo de este campo en las respuestas sujeto a hallazgo de seguridad en remediación — ver docs/backlog.md.",
           },
           createdAt: { type: "string", format: "date-time" },
           updatedAt: { type: "string", format: "date-time" },
@@ -273,9 +272,8 @@ const definition = {
       ServerError: {
         type: "object",
         description:
-          "BUG-004: este shape es el intencional de errorHandler.js, pero ese middleware está registrado antes " +
-          "de las rutas en server.js, así que hoy los errores reales de los controllers no lo alcanzan y caen en " +
-          "el manejador de error por defecto de Express. Ver docs/backlog.md.",
+          "Shape intencional de error 500. Su emisión real está sujeta a un hallazgo de configuración en " +
+          "remediación — ver docs/backlog.md.",
         properties: {
           status: { type: "string", example: "error" },
           message: { type: "string", example: "Internal Server Error" },

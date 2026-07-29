@@ -148,7 +148,7 @@ router.get(
  * /cart/user/{id}:
  *   get:
  *     summary: Obtener el carrito de un usuario por id
- *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad — no valida que el id coincida con el usuario del JWT, por lo que cualquier usuario autenticado puede leer el carrito de cualquier otro userId."
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [Cart]
  *     security:
  *       - bearerAuth: []

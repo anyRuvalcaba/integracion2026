@@ -75,7 +75,7 @@ router.get("/wishlist", authMiddleware, isAdmin, getWishlists);
  * /wishlist/user/{id}:
  *   get:
  *     summary: Obtener la wishlist de un usuario por id
- *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad — cualquier usuario autenticado puede leer la wishlist de cualquier otro userId."
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [Wishlist]
  *     security:
  *       - bearerAuth: []
@@ -165,7 +165,7 @@ router.post(
  * /wishlist/{id}/product:
  *   delete:
  *     summary: Quitar un producto de una wishlist
- *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin chequeo de propiedad sobre la wishlist."
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [Wishlist]
  *     security:
  *       - bearerAuth: []
@@ -215,7 +215,8 @@ router.delete(
  * @openapi
  * /wishlist/{id}:
  *   delete:
- *     summary: Eliminar una wishlist (admin)
+ *     summary: Eliminar una wishlist
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [Wishlist]
  *     security:
  *       - bearerAuth: []
@@ -231,10 +232,6 @@ router.delete(
  *         content:
  *           application/json:
  *             schema: { $ref: "#/components/schemas/UnauthorizedError" }
- *       403:
- *         content:
- *           application/json:
- *             schema: { $ref: "#/components/schemas/ForbiddenError" }
  *       404:
  *         content:
  *           application/json:

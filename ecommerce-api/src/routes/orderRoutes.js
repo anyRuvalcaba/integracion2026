@@ -111,7 +111,7 @@ router.get("/orders", authMiddleware, isAdmin, getOrders);
  * /orders/{id}:
  *   get:
  *     summary: Obtener una orden por id
- *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad — no valida que la orden pertenezca al usuario del JWT, por lo que cualquier usuario autenticado puede leer cualquier orden por id."
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [Orders]
  *     security:
  *       - bearerAuth: []
@@ -205,7 +205,7 @@ router.post(
  * /orders/{id}:
  *   put:
  *     summary: Actualizar el estado de una orden
- *     description: "BUG-008 (backlog): esta ruta solo requiere authMiddleware, sin isAdmin ni chequeo de propiedad — cualquier usuario autenticado puede cambiar el estado de cualquier orden ajena."
+ *     description: "Autorización de este endpoint sujeta a hallazgo de seguridad en remediación — ver docs/backlog.md (BUG-008)."
  *     tags: [Orders]
  *     security:
  *       - bearerAuth: []
