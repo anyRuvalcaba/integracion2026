@@ -316,6 +316,8 @@ Todas las rutas tienen el prefijo `/api` (montado en `server.js`).
 
 Leyenda de columna Auth: `—` = pública | `auth` = requiere JWT válido | `admin` = requiere JWT + role admin.
 
+Documentación OpenAPI/Swagger disponible en `GET /api-docs` (UI) y `GET /api-docs.json` (spec cruda), generada desde comentarios JSDoc `@openapi` en `src/routes/*.js` (`src/config/swagger.js`). Habilitada siempre en `development`; en `production` requiere `ENABLE_DOCS=true`.
+
 ### Auth — `/api/auth`
 
 | Método | Path | Auth | Controller |
@@ -701,13 +703,19 @@ Lee el token de `Authorization: Bearer <token>`. Decodifica con `jwt.verify` usa
 ## Variables de entorno — `ecommerce-api`
 
 ```
+NODE_ENV=development
 PORT=4000
 MONGODB_URI=mongodb://localhost:27017/ecommerce-db-test
+FRONTEND_URL=http://localhost:3000
+CORS_ALLOWED_ORIGINS=http://localhost:3000
 JWT_SECRET=secret_token
 JWT_REFRESH_TOKEN=secret_refresh_token
 JWT_EXPIRES_IN=1h
 JWT_REFRESH_EXPIRES_IN=7d
+ENABLE_DOCS=false
 ```
+
+Validadas centralizadamente en `src/config/env.js` (ver `docs/environment-variables.md`). `FRONTEND_URL`/`CORS_ALLOWED_ORIGINS` obligatorias solo en `NODE_ENV=production`. `ENABLE_DOCS` habilita Swagger UI (`/api-docs`) en producción; en `development` ya está siempre disponible sin necesidad de esta variable.
 
 ## Scripts npm
 
