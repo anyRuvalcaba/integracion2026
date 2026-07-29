@@ -23,7 +23,6 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(logger);
-app.use(errorHandler);
 
 connectDB();
 
@@ -40,6 +39,8 @@ app.use((req, res) => {
     url: req.originalUrl,
   });
 });
+
+app.use(errorHandler);
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on port ${port}`);

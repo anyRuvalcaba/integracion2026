@@ -2,7 +2,9 @@ import PaymentMethod from "../models/PaymentMethod.js";
 
 const getPaymentMethods = async (req, res, next) => {
   try {
-    const paymentMethods = await PaymentMethod.find().populate("user");
+    const paymentMethods = await PaymentMethod.find()
+      .select("-cvv")
+      .populate("user");
     res.status(200).json(paymentMethods);
   } catch (error) {
     next(error);
@@ -12,7 +14,9 @@ const getPaymentMethods = async (req, res, next) => {
 const getUserPaymentMethods = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const paymentMethods = await PaymentMethod.find({ user: userId });
+    const paymentMethods = await PaymentMethod.find({ user: userId }).select(
+      "-cvv",
+    );
     res.status(200).json(paymentMethods);
   } catch (error) {
     next(error);
@@ -22,7 +26,9 @@ const getUserPaymentMethods = async (req, res, next) => {
 const getPaymentMethodById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const paymentMethod = await PaymentMethod.findById(id).populate("user");
+    const paymentMethod = await PaymentMethod.findById(id)
+      .select("-cvv")
+      .populate("user");
     if (!paymentMethod) {
       return res.status(404).json({ message: "Payment method not found" });
     }
@@ -91,6 +97,9 @@ const updatePaymentMethod = async (req, res, next) => {
     if (!existing) {
       return res.status(404).json({ message: "Payment method not found" });
     }
+    if (existing.user.toString() !== req.user.userId && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
 
     if (isDefault) {
       await PaymentMethod.updateMany(
@@ -104,7 +113,9 @@ const updatePaymentMethod = async (req, res, next) => {
       { type, cardNumber, cardHolderName, expiryDate, paypalEmail, bankName, accountNumber, isDefault, cvv },
       { new: true }
     ).populate("user");
-    res.status(200).json(updatedPaymentMethod);
+    const responseData = updatedPaymentMethod.toObject();
+    delete responseData.cvv;
+    res.status(200).json(responseData);
   } catch (error) {
     next(error);
   }
@@ -113,10 +124,14 @@ const updatePaymentMethod = async (req, res, next) => {
 const deletePaymentMethod = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const paymentMethod = await PaymentMethod.findByIdAndDelete(id);
-    if (!paymentMethod) {
+    const existing = await PaymentMethod.findById(id);
+    if (!existing) {
       return res.status(404).json({ message: "Payment method not found" });
     }
+    if (existing.user.toString() !== req.user.userId && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+    await PaymentMethod.findByIdAndDelete(id);
     res.status(204).send();
   } catch (error) {
     next(error);

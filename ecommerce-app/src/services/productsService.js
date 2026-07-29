@@ -1,4 +1,5 @@
 import apiClient from "./apiClient";
+import { invalidateProductsByCategoryCache } from "./categoryService";
 
 // Caché en memoria (vive solo mientras la pestaña esté abierta, sin localStorage).
 // Ver ADR-2-cache-en-memoria-vs-libreria-data-fetching.md.
@@ -14,6 +15,7 @@ function isFresh(entry) {
 function invalidateProductsCache() {
   allProductsCache = null;
   productByIdCache.clear();
+  invalidateProductsByCategoryCache();
 }
 
 export async function getAllProducts() {

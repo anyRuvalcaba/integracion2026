@@ -52,7 +52,7 @@ const SAMPLE_ITEM = {
     name: 'Producto Test',
     price: 100,
     stock: 5,
-    imagesUrl: ['https://placehold.co/600x400'],
+    imageURL: 'https://placehold.co/600x400',
   },
   quantity: 2,
 };

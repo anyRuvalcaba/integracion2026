@@ -72,6 +72,7 @@ router.delete(
 router.delete(
   "/wishlist/:id",
   authMiddleware,
+  isAdmin,
   wishlistIdValidation,
   validate,
   deleteWishlist,

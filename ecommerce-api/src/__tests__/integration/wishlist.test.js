@@ -176,7 +176,28 @@ describe("DELETE /api/wishlist/:id/product", () => {
 // ─── DELETE /api/wishlist/:id ─────────────────────────────────────────────────
 
 describe("DELETE /api/wishlist/:id", () => {
-  it("IT-WISH-014: 204 borra wishlist completa", async () => {
+  it("IT-WISH-014: 204 borra wishlist completa (admin)", async () => {
+    const customer = await createCustomer();
+    const admin = await createAdmin();
+    const wishlist = await WishList.create({ user: customer._id, products: [] });
+
+    const res = await request(app)
+      .delete(`/api/wishlist/${wishlist._id}`)
+      .set("Authorization", `Bearer ${tokenFor(admin)}`);
+
+    expect(res.status).toBe(204);
+  });
+
+  it("IT-WISH-015: 404 si wishlist no existe (admin)", async () => {
+    const admin = await createAdmin();
+    const fakeId = "64a9f2c3e4b0d1234567890a";
+    const res = await request(app)
+      .delete(`/api/wishlist/${fakeId}`)
+      .set("Authorization", `Bearer ${tokenFor(admin)}`);
+    expect(res.status).toBe(404);
+  });
+
+  it("IT-WISH-016: 403 si un customer intenta borrar una wishlist", async () => {
     const customer = await createCustomer();
     const wishlist = await WishList.create({ user: customer._id, products: [] });
 
@@ -184,15 +205,6 @@ describe("DELETE /api/wishlist/:id", () => {
       .delete(`/api/wishlist/${wishlist._id}`)
       .set("Authorization", `Bearer ${tokenFor(customer)}`);
 
-    expect(res.status).toBe(204);
-  });
-
-  it("IT-WISH-015: 404 si wishlist no existe", async () => {
-    const customer = await createCustomer();
-    const fakeId = "64a9f2c3e4b0d1234567890a";
-    const res = await request(app)
-      .delete(`/api/wishlist/${fakeId}`)
-      .set("Authorization", `Bearer ${tokenFor(customer)}`);
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(403);
   });
 });

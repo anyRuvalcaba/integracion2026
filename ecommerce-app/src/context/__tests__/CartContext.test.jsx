@@ -16,7 +16,7 @@ const SAMPLE_PRODUCT = {
   name: 'Producto Test',
   price: 100,
   stock: 5,
-  imagesUrl: ['https://placehold.co/600x400'],
+  imageURL: 'https://placehold.co/600x400',
 };
 
 const SAMPLE_PRODUCT_2 = {
@@ -24,7 +24,7 @@ const SAMPLE_PRODUCT_2 = {
   name: 'Producto 2',
   price: 200,
   stock: 3,
-  imagesUrl: [],
+  imageURL: '',
 };
 
 function CartTestConsumer() {

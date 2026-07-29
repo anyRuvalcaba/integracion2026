@@ -25,6 +25,9 @@ const getOrderById = async (req, res, next) => {
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+    if (order.user._id.toString() !== req.user.userId && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
     res.json(order);
   } catch (error) {
     next(error);
@@ -59,15 +62,19 @@ const updateOrderStatus = async (req, res, next) => {
     const { id } = req.params;
     const { status, paymentStatus } = req.body;
 
+    const existing = await Order.findById(id);
+    if (!existing) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    if (existing.user.toString() !== req.user.userId && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
     const updated = await Order.findByIdAndUpdate(
       id,
       { status, paymentStatus },
       { new: true },
     );
-
-    if (!updated) {
-      return res.status(404).json({ message: "Order not found" });
-    }
 
     res.json(updated);
   } catch (error) {

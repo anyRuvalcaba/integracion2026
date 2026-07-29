@@ -14,6 +14,9 @@ const getWishlists = async (req, res, next) => {
 const getWishlistByUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    if (req.user.userId !== id && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
     const wishlist = await WishList.findOne({ user: id })
       .populate("user")
       .populate("products");
@@ -61,6 +64,9 @@ const removeProductFromWishlist = async (req, res, next) => {
     const wishlist = await WishList.findById(id);
     if (!wishlist) {
       return res.status(404).json({ message: "Wishlist not found" });
+    }
+    if (wishlist.user.toString() !== req.user.userId && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden" });
     }
     wishlist.products = wishlist.products.filter(
       (p) => p.toString() !== productId

@@ -12,7 +12,7 @@ const PRODUCT_IN_STOCK = {
   description: 'Una descripción',
   price: 199.99,
   stock: 10,
-  imagesUrl: ['https://placehold.co/600x400'],
+  imageURL: 'https://placehold.co/600x400',
 };
 
 const PRODUCT_OUT_OF_STOCK = {
@@ -21,7 +21,7 @@ const PRODUCT_OUT_OF_STOCK = {
   description: 'Sin stock',
   price: 50,
   stock: 0,
-  imagesUrl: [],
+  imageURL: '',
 };
 
 function renderProductCard(product) {
