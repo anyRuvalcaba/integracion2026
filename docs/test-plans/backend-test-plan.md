@@ -381,7 +381,9 @@ src/__tests__/
 
 ---
 
-## Resumen global — estado al 2026-06-25
+## Resumen global — estado al 2026-07-19
+
+> Tabla regenerada para coincidir con las matrices detalladas de este documento y con la ejecución real de la suite (`npx vitest run --reporter=verbose`, 180/180). La versión anterior (169) no reflejaba las últimas rondas de tests agregadas a Cart, Orders, Users y Products.
 
 | Módulo | Tipo | Archivo fuente real | Tests | Pasan | Fallan | Estado |
 |--------|------|-------------------|-------|-------|--------|--------|
@@ -392,15 +394,15 @@ src/__tests__/
 | logger | Unitario | `src/middlewares/logger.js` | 3 | 3 | 0 | ✅ PASA |
 | bcrypt hashing | Unitario | `src/controllers/authController.js:19` | 5 | 5 | 0 | ✅ PASA |
 | Auth | Integración | `src/controllers/authController.js` | 11 | 11 | 0 | ✅ PASA |
-| Products | Integración | `src/controllers/productController.js` | 22 | 22 | 0 | ✅ PASA |
+| Products | Integración | `src/controllers/productController.js` | 23 | 23 | 0 | ✅ PASA |
 | Categories | Integración | `src/controllers/categoryController.js` | 16 | 16 | 0 | ✅ PASA |
-| Cart | Integración | `src/controllers/cartController.js` | 12 | 12 | 0 | ✅ PASA |
-| Orders | Integración | `src/controllers/orderController.js` | 13 | 13 | 0 | ✅ PASA |
-| Users | Integración | `src/controllers/userController.js` | 13 | 13 | 0 | ✅ PASA |
+| Cart | Integración | `src/controllers/cartController.js` | 18 | 18 | 0 | ✅ PASA (ver `docs/testing/known-issues.md` — flakiness ocasional en IT-CART-014) |
+| Orders | Integración | `src/controllers/orderController.js` | 15 | 15 | 0 | ✅ PASA |
+| Users | Integración | `src/controllers/userController.js` | 15 | 15 | 0 | ✅ PASA |
 | Wishlist | Integración | `src/controllers/wishlistController.js` | 15 | 15 | 0 | ✅ PASA |
-| PaymentMethods | Integración | `src/controllers/paymentMethodController.js` | 20 | 20 | 0 | ✅ PASA |
+| PaymentMethods | Integración | `src/controllers/paymentMethodController.js` | 20 | 20 | 0 | ✅ PASA — no incluye `GET /payment-methods/me`, sin test (ver `TEST-001` en `docs/backlog.md`) |
 | Addresses | Integración | `src/controllers/addressController.js` | 25 | 25 | 0 | ✅ PASA |
-| **TOTAL** | | | **169** | **169** | **0** | **✅** |
+| **TOTAL** | | | **180** | **180** | **0** | **✅** |
 
 ---
 

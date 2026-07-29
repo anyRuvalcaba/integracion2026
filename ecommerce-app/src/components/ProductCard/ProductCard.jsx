@@ -6,7 +6,7 @@ import "./ProductCard.css";
 
 export default function ProductCard({ product, orientation = "vertical" }) {
   const { addItem } = useCart();
-  const { name, price, stock, imagesUrl, description } = product || {};
+  const { name, price, stock, imageURL, description } = product || {};
 
   if (!product) {
     return (
@@ -32,9 +32,10 @@ export default function ProductCard({ product, orientation = "vertical" }) {
     <div className={cardClass}>
       <Link to={productLink} className="product-card-image-link">
         <img
-          src={imagesUrl ? imagesUrl[0] : "/img/products/placeholder.svg"}
+          src={imageURL || "/img/products/placeholder.svg"}
           alt={name}
           className="product-card-image"
+          loading="lazy"
           onError={(event) => {
             event.target.src = "/img/products/placeholder.svg";
           }}
@@ -69,6 +70,7 @@ export default function ProductCard({ product, orientation = "vertical" }) {
           )}
         </div>
         <Button
+          data-testid="add-to-cart-button"
           variant="primary"
           size="sm"
           disabled={stock === 0}

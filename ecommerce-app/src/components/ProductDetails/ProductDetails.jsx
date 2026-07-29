@@ -96,12 +96,12 @@ export default function ProductDetails({ productId }) {
 
   if (!product) return null;
 
-  const { name, description, price, stock, imagesUrl, category } = product;
+  const { name, description, price, stock, imageURL, category } = product;
   const stockBadge = stock > 0 ? "success" : "error";
   const stockLabel = stock > 0 ? "En stock" : "Agotado";
 
   return (
-    <div className="product-details-container">
+    <div className="product-details-container" data-testid="product-detail">
       <Breadcrumb
         items={[
           { label: "Inicio", to: "/" },
@@ -114,8 +114,9 @@ export default function ProductDetails({ productId }) {
       <div className="product-details-main">
         <div className="product-details-image">
           <img
-            src={imagesUrl?.[0] || "/img/products/placeholder.svg"}
+            src={imageURL || "/img/products/placeholder.svg"}
             alt={name}
+            loading="lazy"
             onError={(event) => {
               event.target.src = "/img/products/placeholder.svg";
             }}
@@ -138,6 +139,7 @@ export default function ProductDetails({ productId }) {
           <div className="product-details-price">${price}</div>
           <div className="product-details-actions">
             <Button
+              data-testid="add-to-cart-button"
               variant="primary"
               size="lg"
               disabled={stock === 0}

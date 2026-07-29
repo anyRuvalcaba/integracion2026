@@ -394,7 +394,8 @@ export default function Checkout() {
                 </p>
                 <hr />
                 <p>
-                  <strong>Total:</strong> {formatMoney(grandTotal)}
+                  <strong>Total:</strong>{" "}
+                  <span data-testid="checkout-grand-total">{formatMoney(grandTotal)}</span>
                 </p>
               </div>
               <p>
@@ -405,6 +406,7 @@ export default function Checkout() {
               </p>
             </div>
             <Button
+              data-testid="checkout-confirm-button"
               className="pay-button"
               disabled={
                 !selectedAddress ||

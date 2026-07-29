@@ -52,10 +52,11 @@ export default function Cart() {
         <div className="cart-summary">
           <div className="cart-total">
             <span className="cart-total-subtitle">Total a pagar</span>
-            <h2>${total.toFixed(2)}</h2>
+            <h2 data-testid="cart-total">${total.toFixed(2)}</h2>
           </div>
           <div className="cart-actions">
             <Button
+              data-testid="cart-checkout-button"
               variant="primary"
               onClick={() => navigate("/checkout")}
               size="lg"

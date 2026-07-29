@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Icon from "../../components/common/Icon/Icon";
+import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { useTheme } from "../../context/ThemeContext";
-import { getCurrentUser, isAuthenticated, logout } from "../../utils/auth";
 import Navigation from "../Navigation/Navigation";
 import "./Header.css";
 
@@ -339,7 +339,7 @@ export default function Header() {
                 aria-label="Ver carrito de compras"
               >
                 <Icon name="shoppingCart" size={24} />
-                <span className="cart-badge">{count}</span>
+                <span className="cart-badge" data-testid="cart-count">{count}</span>
               </Link>
 
               {/* Desktop Theme Toggle */}

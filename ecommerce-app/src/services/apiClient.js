@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
+if (!API_URL) {
+  throw new Error("Falta configurar REACT_APP_API_URL");
+}
+
 const apiClient = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: API_URL,
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
 });
@@ -30,7 +36,7 @@ function classifyError(error) {
     return { kind: "TIMEOUT", original: error };
   }
 
-  if (error.request) {
+  if (error.request || (error.isAxiosError && !error.response)) {
     return { kind: "NETWORK", original: error };
   }
 

@@ -1,0 +1,44 @@
+# Backlog
+
+> Única fuente de trabajo válida (P-14, `.agents/protocols/global-rules.md`). Ningún pendiente se trabaja sin estar registrado aquí.
+
+| ID | Tipo | Descripción | Prioridad | Estado |
+|---|---|---|---|---|
+| INFRA-001 | infra | Harness de modelos y agentes versionado (`.claude/model-policy.md`, materialización de 17 agentes, `dod-loop.md`, ADR-1) | Alta | Listo para merge — spec DONE, PR #1 con `tech-reviewer` APTO (3ª pasada), pendiente de aprobación del usuario |
+| TEST-000 | docs | Estrategia integral de pruebas — fase base (5 docs en `docs/testing/`, 6 fixes de infraestructura, infraestructura de testing frontend commiteada, 22 ítems de backlog derivados) | Alta | Listo para merge — spec DONE, PR #2 con `tech-reviewer` APTO (2ª pasada), pendiente de aprobación del usuario |
+| INFRA-002 | infra | Activar FASE 10.5 (baseline oficial, tag `baseline/v1.0`) cuando el backlog esté formalizado y priorizado en su totalidad | Media | Pendiente |
+| INFRA-003 | infra | Verificar manualmente que el plugin `codex@openai-codex` declarado en `.claude/settings.json` carga correctamente | Media | Pendiente |
+| INFRA-004 | infra | Mergear PR #1 (`infra/model-agent-harness` → `develop`) — `tech-reviewer` dio APTO en la 3ª pasada, listo técnicamente; falta la aprobación explícita del usuario para mergear | Alta | Listo para merge |
+| INFRA-005 | bugfix | Investigar `IT-CART-014` (`ecommerce-api/src/__tests__/integration/cart.test.js`) por posible flakiness — falló en una corrida (179/180) y pasó en otra (180/180) sobre el mismo commit; `docs/test-plans/backend-test-plan.md` lo documenta como 180/180 estable. No relacionado con INFRA-001 | Media | Pendiente |
+| INFRA-006 | docs | `ecommerce-api/.env.example` tiene `PORT=3000` pero el `.env` real y `apiClient.js` usan `4000` — alinear el ejemplo con el valor real | Baja | Pendiente |
+| BUG-001 | bugfix | `AuthProvider` ausente en `ecommerce-app/src/components/App/App.jsx` — solo `CartProvider` está montado, `useAuth()` fallaría en cualquier componente que lo use | Crítica | Resuelto (2026-07-22, en working tree, pendiente de commit) |
+| BUG-002 | bugfix | `CartContext.jsx:85` usa `items.product_id`; el campo real del modelo `Cart.products[]` es `product` (ObjectId), no `product_id` — el cálculo de carrito no coincide con el schema | Crítica | Resuelto (2026-07-22, en working tree, pendiente de commit) |
+| BUG-003 | bugfix | `CartContext.jsx` mezcla `cartid` (línea 14, declarado) con `cartId` (línea 124, usado) — nombres de variable de estado inconsistentes, el carrito no actualiza correctamente | Crítica | Resuelto (2026-07-21, en working tree, pendiente de commit) |
+| BUG-004 | bugfix | `ecommerce-api/server.js` registra `errorHandler` (línea 23) ANTES de `app.use("/api", routes)` (línea 31) — los errores de las rutas no pasan por el error handler centralizado | Alta | Pendiente |
+| BUG-005 | bugfix | `cartController.js:160` usa `cart.populate("products.productId")`; el campo real en `Cart.products[]` es `product`, no `productId` — `addProductToCart` probablemente falla o no popula correctamente | Alta | Pendiente |
+| BUG-006 | bugfix | `ProductCard.jsx`, `ProductDetails.jsx`, `CartView.jsx` desestructuran `product.imagesUrl` (array); el campo real del modelo `Product` es `imageURL` (string, singular). Ningún producto real muestra su imagen — siempre cae al placeholder. Detectado por `anti-hallucination-reviewer` durante la auditoría de `TEST-000`, preexistente, no introducido por ese pendiente | Alta | Resuelto (2026-07-21/22, en working tree, pendiente de commit) |
+| INFRA-007 | docs | Limpieza de referencias residuales en `.agents/`: `anti-hallucination-reviewer.md` menciona IDs obsoletos `T-015/T-016` (no existen en este backlog), y quedan menciones informales a `CLAUDE.md` sin el prefijo `.claude/` en varios roles (no son comandos ejecutables, solo prosa descriptiva) | Baja | Pendiente |
+| TEST-001 | test | Backend: `GET /payment-methods/me` sin test de integración — endpoint activo en producción, único con 0% de cobertura (ver `docs/testing/known-issues.md`) | Alta | Pendiente |
+| TEST-002 | test | Backend: sin validación de `totalPrice`/stock en `createOrder` — riesgo de negocio real (dinero, sin cobertura); requiere implementar la regla antes de poder testearla | Alta | Pendiente |
+| TEST-003 | test | Frontend: `CartView`/página `Cart` sin test unitario — core flow, solo cubierto indirectamente vía `CartContext.test.jsx`. Cubre los escenarios `CART-001`/`CART-002` de `test-matrix.md`, marcados Crítica | Crítica | Pendiente |
+| TEST-004 | test | Frontend: `Checkout/Address` (`AddressForm`, `AddressList`, `AddressItem`) sin test unitario dedicado | Alta | Pendiente |
+| TEST-005 | test | Frontend: `Checkout/Payment` (`PaymentForm`, `PaymentList`, `PaymentItem`) sin test unitario dedicado | Alta | Pendiente |
+| TEST-006 | infra | Backend/Arquitectura: decidir destino de `cartController.addProductToCart` (montarla corrigiendo el bug de `BUG-005`, o eliminar código muerto) — requiere `architecture-reviewer` antes de implementar | Media | Pendiente |
+| TEST-007 | test | Frontend: `SummarySection` sin test aislado (solo cubierto indirectamente vía `Checkout.test.jsx`) | Media | Pendiente |
+| TEST-008 | test | Frontend: `Orders`, `PurchaseOrder`, `OrderConfirmation` sin test unitario | Media | Pendiente |
+| TEST-009 | test | Frontend: `WishList` sin test unitario | Media | Pendiente |
+| TEST-010 | test | Frontend: `Profile`/`ProfileCard` sin test unitario | Media | Pendiente |
+| TEST-011 | test | Frontend: `AuthContext` sin test directo — solo cubierto indirectamente vía `LoginForm`/`ProtectedRoute` | Media | Pendiente |
+| TEST-012 | test | Frontend: `CategoryProducts`/`SearchResultsList`/páginas wrapper (`Product.jsx`, `CategoryPage.jsx`, `SearchResults.jsx`) sin test | Media | Pendiente |
+| TEST-013 | test | E2E: sin spec dedicado a alta/edición de dirección y método de pago | Media | Pendiente |
+| TEST-014 | test | Frontend: cobertura real medida (2026-07-19) = 33.79% statements / 23.52% branches / 24% functions / 34.99% lines (`npm run test:coverage`) — configurar thresholds iniciales en `package.json` (a diferencia del backend, que ya tiene 70/70/60/70). El número real es bajo porque solo 7 de ~35 componentes tienen test; subirá conforme se cierren `TEST-003` a `TEST-012` | Media | Pendiente |
+| TEST-015 | test | Frontend: `layout/` (Header, Footer, Navigation, Breadcrumb, Newsletter) sin test | Baja | Pendiente |
+| TEST-016 | test | Frontend: `common/` (Button, Input, Badge, ErrorMessage, Icon, Loading) sin test directo | Baja | Pendiente |
+| TEST-017 | test | Frontend: `ThemeContext` sin test | Baja | Pendiente |
+| TEST-018 | test | E2E: sin spec de búsqueda/categorías, Orders, WishList, Profile | Baja | Pendiente |
+| TEST-019 | infra | Root: evaluar si conviene un `package.json` raíz con scripts unificados (`test:all`, etc.) — requiere `architecture-reviewer`, decisión estructural | Baja | Pendiente |
+| TEST-020 | test | Backend: `src/config/db.conf.js` sin test (0% cobertura) — ya aceptado como bajo impacto en `docs/test-plans/backend-test-plan.md` | Baja | Pendiente |
+| PERF-001 | perf | Frontend: auditoría de performance (lazy loading por ruta/componente, code splitting, caché de datos, carga de imágenes, reducción de re-renders) — requiere `architecture-reviewer` antes de implementar por el riesgo sobre páginas sin cobertura de test (`TEST-003` a `TEST-012`) | Media | Done — spec DONE, `code-reviewer` APROBADO, `anti-hallucination-reviewer` APTO |
+| PERF-002 | perf | Frontend: ejecutar Lighthouse antes/después sobre `/` y `/checkout` (paso 4 del plan de medición de `PERF-001`) — no se pudo correr en el entorno del agente, requiere navegador + backend real | Media | Pendiente |
+| PERF-003 | perf | Frontend: `invalidateProductsCache` (`productsService.js`) no invalida `productsByCategoryCache` (`categoryService.js`) — mutar un producto puede dejar `getProductsByCategoryAndChildren` sirviendo datos obsoletos hasta 60s. Detectado por `code-reviewer` durante `PERF-001` | Baja | Pendiente |
+| PERF-004 | test | Frontend: fixtures de test con campo `imagesUrl` obsoleto (`imageURL` es el campo real desde `BUG-006`) en `CartContext.test.jsx`, `ProductCard.test.jsx`, `ProductDetails.test.jsx`, `Checkout.test.jsx` — no rompen los tests actuales pero no validan el `src` real de imagen. Detectado por `anti-hallucination-reviewer`/`code-reviewer` durante `PERF-001` | Baja | Pendiente |
